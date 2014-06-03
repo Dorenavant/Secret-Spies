@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+	
+	<head>
+    	<title>SecretSpies - some short description</title>
+        <meta name="description" content="A good description of the game" />
+        <meta charset="utf-8" />
+        <meta http-equiv="content-type" content="text/html" />
+        
+        <link rel="shortcut icon" href="assets/common/favicon.ico" />
+        
+        <link rel="stylesheet" type="text/css" href="assets/default-style.css" media="screen" />
+		
+		<div id="local_script">
+            <script src="lib/jquery/jquery-2.1.0.min.js"></script>
+            <script src="lib/phaser/phaser.js"></script>
+
+            <script src="src/SecretSpies/SecretSpies.js"></script>
+            <script src="src/SecretSpies/GameState.js"></script>
+            <script src="src/SecretSpies/MainMenuState.js"></script>
+
+            <script src="src/SecretSpies/Bootstrap.js"></script>
+		</div>
+        
+        <script>
+            window.addEventListener('load', function() {
+                var gameDiv = document.getElementById("game-div");
+                SecretSpies.Bootstrap.run(gameDiv, 840, 630, "assets/common", "assets/level");
+            });
+        </script>
+        
+    </head>
+    
+    <body>
+        <div id="game-div"></div>
+    </body>
+    
+</html>
