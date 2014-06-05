@@ -25,8 +25,60 @@ this.SecretSpies = this.SecretSpies || {};
         _extend(child, parent);
     }
 
-    SecretSpies.resizeSpriteTo = function(s, w, h) {
-        s.scale.setTo(w / s.texture.width, h / s.texture.height);
+
+    SecretSpies.scaler = function(obj, subObj) {
+        var subObjAvailable = (typeof subObj !== "undefined");
+        return {
+            scale: function(w, h) {
+                if (typeof h === "undefined") {
+                    h = w.height || w.y;
+                    w = w.width || w.x;
+                }
+                if (subObjAvailable) {
+                    var sub = SecretSpies.property.get(obj, subObj);
+                    obj.scale.setTo(w / (sub.width || sub.x), h / (sub.height || sub.y));
+                } else {
+                    obj.scale.setTo(w, h);
+                }
+                
+            }
+        }
+    }
+
+    var LabelButton = function(game, x, y, key, style, callback, callbackContext, overFrame, outFrame, downFrame, upFrame) {
+        Phaser.Button.call(this, game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame);
+
+        style = style || {
+            "font": "10px Arial",
+            "fill": "black"
+        };
+
+        this.label = new Phaser.Text(game, 0, 0, "Label", style);
+        this.addChild(this.label);
+        this.setText("Label");
+    }
+
+    LabelButton.prototype = Object.create(Phaser.Button.prototype);
+    LabelButton.prototype.constructor = LabelButton;
+
+    LabelButton.prototype.setText = function(label) {
+        this.label.setText(label);
+        this.label.x = Math.floor((this.width - this.label.width) * 0.5);
+        this.label.y = Math.floor((this.height - this.label.height) * 0.5);
+    }
+
+    SecretSpies.ui = SecretSpies.ui || {};
+
+    SecretSpies.ui.LabelButton = LabelButton;
+
+    Phaser.GameObjectFactory.prototype.labelButton = function (x, y, key, style, 
+        callback, callbackContext, overFrame, outFrame, downFrame, upFrame, group) {
+
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.add(new SecretSpies.ui.LabelButton(this.game, x, y, key, style, 
+            callback, callbackContext, overFrame, outFrame, downFrame, upFrame));
+
     }
 
     var physicsTypeMap = {

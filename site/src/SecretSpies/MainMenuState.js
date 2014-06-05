@@ -14,21 +14,24 @@ this.SecretSpies = this.SecretSpies || {};
 
     p.preload = function() {
         var assets = SecretSpies.path.assets;
-        console.log(assets);
         this.load.image("MainMenuState/background", assets.level.child("mainMenu/introscreen.png"));
-        this.load.image("MainMenuState/buttons", assets.common.child("textures/buttons.png"));
-        // this.load.spritesheet("MainMenuState/buttons", assets.common.child("textures/buttons.png"), 558, 64);
-        this.load.image("MainMenuState/world-s-screen"), assets.level.child("mainMenu/world-map-screen.png");
+        this.load.spritesheet("MainMenuState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
     }
 
     p.create = function() {
         var background = this.objects["background"] = this.add.sprite(0, 0, "MainMenuState/background");
-        SecretSpies.resizeSpriteTo(background, this.stage.bounds.width, this.stage.bounds.height);  
-        var button;
-        button = this.add.button(this.world.centerX + 95, 400, "buttons", actionOnClick, this, 2, 1 , 0);
-        function actionOnClick () {
-            background = this.objects["world-map-screen"];
-        }
+        SecretSpies.scaler(background, "texture").scale(this.stage.bounds);  
+        var button = this.add.labelButton(this.world.centerX + 95, 400, "MainMenuState/buttons", 
+            {
+                "font": "20px Arial", 
+                "fill": "white"
+            }, 
+            function() {
+                this.state.add("WorldMapState", new SecretSpies.WorldMapState());
+                this.state.start("WorldMapState");
+            }, 
+            this, 0, 1, 2, 1);
+        button.setText("Play");
     }
 
     p.update = function() {

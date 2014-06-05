@@ -7,6 +7,7 @@ INPUT_FILES := \
 	\
 	$(SRC)/SecretSpies.js \
 	$(SRC)/GameState.js \
+	$(SRC)/WorldMapState.js \
 	$(SRC)/MainMenuState.js \
 	\
 	$(SRC)/Bootstrap.js
