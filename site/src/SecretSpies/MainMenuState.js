@@ -14,12 +14,12 @@ this.SecretSpies = this.SecretSpies || {};
 
     p.preload = function() {
         var assets = SecretSpies.path.assets;
-        this.load.image("MainMenuState/background", assets.level.child("mainMenu/background.png"));
+        this.load.image("MainMenuState/background", assets.level.child("mainMenu/introscreen.png"));
     }
 
     p.create = function() {
         var background = this.objects["background"] = this.add.sprite(0, 0, "MainMenuState/background");
-        SecretSpies.resizeSpriteTo(background, this.stage.bounds.width, this.stage.bounds.height);
+        SecretSpies.resizeSpriteTo(background, this.stage.bounds.width, this.stage.bounds.height);  
     }
 
     p.update = function() {
