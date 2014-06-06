@@ -21,7 +21,7 @@ this.SecretSpies = this.SecretSpies || {};
     p.create = function() {
         var background = this.objects["background"] = this.add.sprite(0, 0, "MainMenuState/background");
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);  
-        var button = this.add.labelButton(this.world.centerX + 95, 400, "MainMenuState/buttons", 
+        var playButton = this.add.labelButton(this.world.centerX + 110, 420, "MainMenuState/buttons", 
             {
                 "font": "20px Arial", 
                 "fill": "white"
@@ -31,7 +31,17 @@ this.SecretSpies = this.SecretSpies || {};
                 this.state.start("WorldMapState");
             }, 
             this, 0, 1, 2, 1);
-        button.setText("Play");
+        playButton.setText("Play");
+        var quitButton = this.add.labelButton(this.world.centerX + 110, 490, "MainMenuState/buttons",
+            {
+                "font": "20px Arial",
+                "fill": "white"
+            },
+            function () {
+                console.log("stupid n00b");
+            },
+            this, 0, 1, 2, 1);
+        quitButton.setText("Quit");
     }
 
     p.update = function() {
