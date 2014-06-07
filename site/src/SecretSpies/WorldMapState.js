@@ -25,6 +25,8 @@ this.SecretSpies = this.SecretSpies || {};
     p.create = function() {
     	var background = this.objects["worldMap"] = this.add.sprite(0, 0, "WorldMapState/worldMap");
     	SecretSpies.scaler(background, "texture").scale(this.stage.bounds); 
+    	background.inputEnabled = true;
+    	background.input.pixelPerfectOver = true;
     	var button = this.add.labelButton(30, 30, "WorldMapState/buttons",  
     		{
                 "font": "20px Arial", 
@@ -36,15 +38,14 @@ this.SecretSpies = this.SecretSpies || {};
             },
             this, 0, 1, 2, 1);
     	button.setText("Shop");
-    	var northAmericaClick = this.add.sprite(40, 40, "WorldMapState/transparentPixel",);
-    	var click = this.add.listener()
+    	//var northAmericaClick = this.add.sprite(40, 40, "WorldMapState/transparentPixel",);
     }
 
     p.update = function() {
     }
 
     p.render = function() {
-
+    	this.game.debug.spriteInputInfo(this.objects["worldMap"], 200, 200);
     }
 
     SecretSpies.WorldMapState = WorldMapState;
