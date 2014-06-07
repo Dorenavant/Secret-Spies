@@ -22,9 +22,9 @@ this.SecretSpies = this.SecretSpies || {};
     p.create = function() {
     	var background = this.objects["worldMap"] = this.add.sprite(0, 0, "WorldMapState/worldMap");
     	SecretSpies.scaler(background, "texture").scale(this.stage.bounds); 
-    	var button = this.add.labelButton(30, 30, "WorldMapState/buttons",  
+    	var shopButton = this.add.labelButton(30, 30, "WorldMapState/buttons",  
     		{
-                "font": "20px Arial", 
+                "font": "18px Arial", 
                 "fill": "white"
             }, 
             function() {
@@ -32,16 +32,26 @@ this.SecretSpies = this.SecretSpies || {};
                 this.state.start("ShopState");
             },
             this, 0, 1, 2, 1);
-    	button.setText("Shop");
+    	shopButton.setText("Shop");
+
+    	var backButton = this.add.labelButton(625, 30, "WorldMapState/buttons",
+    		{
+    			"font": "18px Arial",
+    			"fill": "white"
+    		},
+    		function() {
+    			this.state.start("MainMenuState");
+    		},
+    		this, 0, 1, 2, 1);
+    	backButton.setText("Back to MainMenu");
 
     	var northAmericaClick = this.add.sprite(15, 115, "WorldMapState/transparentPixel");
     	northAmericaClick.inputEnabled = true;
     	northAmericaClick.input.useHandCursor = true;
     	northAmericaClick.width = 275
     	northAmericaClick.height = 215
-    	this.game.input.onDown.addOnce(northAmericaClicked, this);
+    	northAmericaClick.events.onInputDown.add(northAmericaClicked, this);
     	function northAmericaClicked() {
-    		console.log("north America");
     		this.state.add("NorthAmericaState", new SecretSpies.NorthAmericaState());
             this.state.start("NorthAmericaState");
     	}
@@ -51,21 +61,19 @@ this.SecretSpies = this.SecretSpies || {};
     	europeClick.input.useHandCursor = true;
     	europeClick.width = 110
     	europeClick.height = 175	
-    	this.game.input.onDown.addOnce(europeClicked, this);
+    	europeClick.events.onInputDown.add(europeClicked, this);
     	function europeClicked() {
-    		console.log("europe");
     		this.state.add("EuropeState", new SecretSpies.EuropeState());
             this.state.start("EuropeState");
     	}
 
-    	var asiaClick = this.add.sprite(525, 150, "WorldMapState/transparentPixel");
+    	var asiaClick = this.add.sprite(550, 150, "WorldMapState/transparentPixel");
     	asiaClick.inputEnabled = true;
     	asiaClick.input.useHandCursor = true;
-    	asiaClick.width = 150
+    	asiaClick.width = 125
     	asiaClick.height = 225	
-    	this.game.input.onDown.addOnce(asiaClicked, this);
+    	asiaClick.events.onInputDown.add(asiaClicked, this);
     	function asiaClicked() {
-    		console.log("asia");
     		this.state.add("AsiaState", new SecretSpies.AsiaState());
             this.state.start("AsiaState");
     	}
@@ -73,11 +81,10 @@ this.SecretSpies = this.SecretSpies || {};
     	var africaClick = this.add.sprite(365, 275, "WorldMapState/transparentPixel");
     	africaClick.inputEnabled = true;
     	africaClick.input.useHandCursor = true;
-    	africaClick.width = 160
+    	africaClick.width = 185
     	africaClick.height = 275	
-    	this.game.input.onDown.addOnce(africaClicked, this);
+    	africaClick.events.onInputDown.add(africaClicked, this);
     	function africaClicked() {
-    		console.log("africa");
     		this.state.add("AfricaState", new SecretSpies.AfricaState());
             this.state.start("AfricaState");
     	}

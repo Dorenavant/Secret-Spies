@@ -21,17 +21,14 @@ this.SecretSpies = this.SecretSpies || {};
     p.create = function() {
         var background = this.objects["background"] = this.add.sprite(0, 0, "ShopState/background");
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);  
-        var button = this.add.labelButton(20, 200, "ShopState/buttons", 
+        /*var button = this.add.labelButton(20, 200, "ShopState/buttons", 
             {
                 "font": "20px Arial", 
                 "fill": "white"
             }, 
-            function() {
-                this.state.add("MountainLevelState", new SecretSpies.MountainLevelState());
-                this.state.start("MountainLevelState");
-            },
+            undefined
             this, 0, 1, 2, 1);
-        button.setText("Swag Button");
+        button.setText("Swag Button");*/
     }
 
     p.update = function() {

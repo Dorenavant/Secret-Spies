@@ -19,7 +19,7 @@ this.SecretSpies = this.SecretSpies || {};
 
     p.create = function() {
         var background = this.objects["background"] = this.add.sprite(0, 0, "AsiaState/background");
-        SecretSpies.scaler(background, "texture").scale(this.stage.bounds);  
+        SecretSpies.scaler(background, "texture").scale(this.stage.bounds); 2 
     }
 
     p.update = function() {
