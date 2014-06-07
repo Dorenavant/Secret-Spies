@@ -32,16 +32,6 @@ this.SecretSpies = this.SecretSpies || {};
             }, 
             this, 0, 1, 2, 1);
         playButton.setText("Play");
-        var quitButton = this.add.labelButton(this.world.centerX + 110, 490, "MainMenuState/buttons",
-            {
-                "font": "20px Arial",
-                "fill": "white"
-            },
-            function () {
-                console.log("stupid n00b");
-            },
-            this, 0, 1, 2, 1);
-        quitButton.setText("Quit");
     }
 
     p.update = function() {

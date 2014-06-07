@@ -27,11 +27,11 @@ this.SecretSpies = this.SecretSpies || {};
                 "fill": "white"
             }, 
             function() {
-                console.log("swag");
-            }, 
+                this.state.add("MountainLevelState", new SecretSpies.MountainLevelState());
+                this.state.start("MountainLevelState");
+            },
             this, 0, 1, 2, 1);
         button.setText("Swag Button");
-        button.width = 400
     }
 
     p.update = function() {

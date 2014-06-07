@@ -8,7 +8,7 @@ INPUT_FILES := \
 	$(SRC)/SecretSpies.js \
 	$(SRC)/GameState.js \
 	$(SRC)/ShopState.js \
-	$(SRC)/FirstLevelState.js \
+	$(SRC)/MountainLevelState.js \
 	$(SRC)/WorldMapState.js \
 	$(SRC)/MainMenuState.js \
 	\
