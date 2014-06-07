@@ -3,22 +3,22 @@ this.SecretSpies = this.SecretSpies || {};
 (function(undefined) {
     "use strict";
 
-    var NorthAmericaState = function() {
+    var AsiaState = function() {
         this.objects = {};
         this._cachedValues = {};
     }
 
-    SecretSpies.extend(NorthAmericaState, SecretSpies.GameState);
+    SecretSpies.extend(AsiaState, SecretSpies.GameState);
 
-    var p = NorthAmericaState.prototype;
+    var p = AsiaState.prototype;
 
     p.preload = function() {
         var assets = SecretSpies.path.assets;
-        this.load.image("NorthAmericaState/background", assets.level.child("worldMap/northAmerica.png"));
+        this.load.image("AsiaState/background", assets.level.child("worldMap/asia.png"));
     }
 
     p.create = function() {
-        var background = this.objects["background"] = this.add.sprite(0, 0, "NorthAmericaState/background");
+        var background = this.objects["background"] = this.add.sprite(0, 0, "AsiaState/background");
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);  
     }
 
@@ -28,6 +28,6 @@ this.SecretSpies = this.SecretSpies || {};
     p.render = function() {
     }
 
-    SecretSpies.NorthAmericaState = NorthAmericaState;
+    SecretSpies.AsiaState = AsiaState;
 
 })();
