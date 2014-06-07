@@ -9,10 +9,6 @@ INPUT_FILES := \
 	$(SRC)/GameState.js \
 	$(SRC)/ShopState.js \
 	$(SRC)/MountainLevelState.js \
-	$(SRC)/NorthAmericaState.js \
-	$(SRC)/EuropeState.js \
-	$(SRC)/AsiaState.js \
-	$(SRC)/AfricaState.js \
 	$(SRC)/WorldMapState.js \
 	$(SRC)/MainMenuState.js \
 	\
