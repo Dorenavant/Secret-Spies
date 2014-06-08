@@ -44,7 +44,6 @@ this.SecretSpies = this.SecretSpies || {};
 
         var coinsCollisionGroup = this.physics.p2.createCollisionGroup();
         var characterCollisionGroup = this.physics.p2.createCollisionGroup();
-        var blocksCollisionGroup = this.physics.p2.createCollisionGroup();
 
         this.physics.p2.updateBoundsCollisionGroup();
 
@@ -55,17 +54,16 @@ this.SecretSpies = this.SecretSpies || {};
         map.createFromObjects("coins", 157, "MountainLevelState/coins", 0, true, false, coins);
         coins.callAll("animations.add", "animations", "spin", [0, 1, 2, 3, 4, 5], 10, true);
         coins.callAll("animations.play", "animations", "spin");
-        coins.setAll("body.allowGravity", false);
-
-        for (var i = 0; i < coins.length; i++) {
-            
-        }
+        coins.forEach(function(coin){
+            //console.log(coin.body);
+            coin.body.static = true;
+        }, this);
         
         map.setCollision([23, 38], true, ground);
         map.setCollision([157], true, ground);
 
         this.physics.p2.convertTilemap(map, ground);
-        //this.physics.p2.gravity.y = 400;
+        this.physics.p2.gravity.y = 400;
 
         var character = this.objects["character"] = this.add.sprite(25, 3300, "MountainLevelState/character");
         SecretSpies.scaler(character, "texture").scale(48, 64);
@@ -74,9 +72,6 @@ this.SecretSpies = this.SecretSpies || {};
 
         character.body.collideWorldBounds = true;
         character.body.fixedRotation = true;
-        character.body.setCollisionGroup(characterCollisionGroup);
-        character.body.collides(coinsCollisionGroup, hitCoin, this);
-        //character.body.collides(blocksCollisionGroup, hitBlock, this);
         character.animations.add('left', [0, 1, 2, 3], 10, true);
         character.animations.add('turn', [4], 20, true);
         character.animations.add('right', [5, 6, 7, 8], 10, true);
