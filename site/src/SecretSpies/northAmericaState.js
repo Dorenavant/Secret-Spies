@@ -30,8 +30,8 @@ this.SecretSpies = this.SecretSpies || {};
         iqaluit.input.useHandCursor = true;
         iqaluit.events.onInputDown.add(iqaluitClicked, this);
         function iqaluitClicked() {
-            this.state.add("MountainLevelState", new SecretSpies.MountainLevelState);
-            this.state.start("MountainLevelState");
+            this.state.add("IqaluitLevelState", new SecretSpies.IqaluitLevelState);
+            this.state.start("IqaluitLevelState");
         }   
 
         var newYork = this.objects["newYork"] = this.add.sprite(350, 250, "NorthAmericaState/newYork");
@@ -41,8 +41,8 @@ this.SecretSpies = this.SecretSpies || {};
         newYork.input.useHandCursor = true;
         newYork.events.onInputDown.add(newYorkClicked, this);
         function newYorkClicked() {
-            this.state.add("MountainLevelState", new SecretSpies.MountainLevelState);
-            this.state.start("MountainLevelState");
+            this.state.add("IqaluitLevelState", new SecretSpies.IqaluitLevelState);
+            this.state.start("IqaluitLevelState");
         }   
     }
 

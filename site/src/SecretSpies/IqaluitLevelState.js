@@ -3,25 +3,25 @@ this.SecretSpies = this.SecretSpies || {};
 (function (undefined) {
     "use strict";
 
-    var MountainLevelState = function () {
+    var IqaluitLevelState = function () {
         this.objects = {};
         this._cachedValues = {};
     }
 
-    SecretSpies.extend(MountainLevelState, SecretSpies.GameState);
+    SecretSpies.extend(IqaluitLevelState, SecretSpies.GameState);
 
-    var p = MountainLevelState.prototype;
+    var p = IqaluitLevelState.prototype;
 
     p.preload = function () {
         var assets = SecretSpies.path.assets;
-        this.load.image("MountainLevelState/background", assets.level.child("mountainLevel/mountainBackground.png"));
-        this.load.spritesheet("MountainLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
-        this.load.image("MountainLevelState/blocks", assets.level.child("mountainLevel/mountainBlock.png"));
-        this.load.spritesheet("MountainLevelState/character", assets.common.child("textures/character.png"), 27, 40);
-        this.load.spritesheet("MountainLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
+        this.load.image("IqaluitLevelState/background", assets.level.child("iqaluitLevel/mountainBackground.png"));
+        this.load.spritesheet("IqaluitLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
+        this.load.image("IqaluitLevelState/blocks", assets.level.child("iqaluitLevel/mountainBlock.png"));
+        this.load.spritesheet("IqaluitLevelState/character", assets.common.child("textures/character.png"), 27, 40);
+        this.load.spritesheet("IqaluitLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
 
-        this.load.tilemap("MountainLevelState/map", assets.level.child("mountainLevel/level.json"), null, Phaser.Tilemap.TILED_JSON);
-        this.load.image("MountainLevelState/map/tiles", assets.common.child("textures/kennyTiles.png"));
+        this.load.tilemap("IqaluitLevelState/map", assets.level.child("iqaluitLevel/level.json"), null, Phaser.Tilemap.TILED_JSON);
+        this.load.image("IqaluitLevelState/map/tiles", assets.common.child("textures/kennyTiles.png"));
 
     }
 
@@ -30,14 +30,14 @@ this.SecretSpies = this.SecretSpies || {};
         this.objects["facing"] = "left";
         this.objects["jumpTimer"] = 0;
 
-        var background = this.objects["background"] = this.add.sprite(0, 0, "MountainLevelState/background");
+        var background = this.objects["background"] = this.add.sprite(0, 0, "IqaluitLevelState/background");
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);
         background.fixedToCamera = true;
 
         this.physics.startSystem(Phaser.Physics.P2JS);
 
-        var map = this.objects["map"] = this.add.tilemap("MountainLevelState/map");
-        map.addTilesetImage("tiles", "MountainLevelState/map/tiles");
+        var map = this.objects["map"] = this.add.tilemap("IqaluitLevelState/map");
+        map.addTilesetImage("tiles", "IqaluitLevelState/map/tiles");
 
         var ground = this.objects["ground"] = map.createLayer("tiles");
         ground.resizeWorld();
@@ -51,7 +51,7 @@ this.SecretSpies = this.SecretSpies || {};
         coins.enableBody = true;
         coins.physicsBodyType = Phaser.Physics.P2JS;
 
-        map.createFromObjects("coins", 157, "MountainLevelState/coins", 0, true, false, coins);
+        map.createFromObjects("coins", 157, "IqaluitLevelState/coins", 0, true, false, coins);
         coins.callAll("animations.add", "animations", "spin", [0, 1, 2, 3, 4, 5], 10, true);
         coins.callAll("animations.play", "animations", "spin");
         coins.forEach(function(coin){
@@ -65,7 +65,7 @@ this.SecretSpies = this.SecretSpies || {};
         this.physics.p2.convertTilemap(map, ground);
         this.physics.p2.gravity.y = 400;
 
-        var character = this.objects["character"] = this.add.sprite(25, 3300, "MountainLevelState/character");
+        var character = this.objects["character"] = this.add.sprite(25, 3300, "IqaluitLevelState/character");
         SecretSpies.scaler(character, "texture").scale(48, 64);
         this.physics.p2.enable(character);
         this.physics.p2.setBoundsToWorld(true, true, true, true, false);
@@ -76,9 +76,7 @@ this.SecretSpies = this.SecretSpies || {};
         character.animations.add('turn', [4], 20, true);
         character.animations.add('right', [5, 6, 7, 8], 10, true);
 
-        function resetJump() {
-            console.log("wank");
-        }
+        
 
         map.setTileIndexCallback([23, 38], resetJump);
 
@@ -92,6 +90,10 @@ this.SecretSpies = this.SecretSpies || {};
         console.log("wanka");
     }
 
+    function resetJump() {
+        console.log("wank");
+    }
+
     p.update = function () {
         var facing = this.objects["facing"];
         var jumpTimer = this.objects["jumpTimer"];
@@ -100,7 +102,7 @@ this.SecretSpies = this.SecretSpies || {};
         var jumpButton = this.objects["jumpButton"];
 
         if (character.position.y > 3380) {
-            this.state.start("MountainLevelState");
+            this.state.start("IqaluitLevelState");
         }
 
         character.body.velocity.x = 0;
@@ -131,7 +133,7 @@ this.SecretSpies = this.SecretSpies || {};
             }
         }
         if (jumpButton.isDown && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
-            character.body.moveUp(250);
+            character.body.moveUp(300);
             jumpTimer = this.time.now + 750;
         }
 
@@ -155,6 +157,6 @@ this.SecretSpies = this.SecretSpies || {};
     }
     p.render = function () {}
 
-    SecretSpies.MountainLevelState = MountainLevelState;
+    SecretSpies.IqaluitLevelState = IqaluitLevelState;
 
 })();
