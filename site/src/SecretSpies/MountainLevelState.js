@@ -18,7 +18,7 @@ this.SecretSpies = this.SecretSpies || {};
         this.load.spritesheet("MountainLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
         this.load.image("MountainLevelState/blocks", assets.level.child("mountainLevel/mountainBlock.png"));
         this.load.spritesheet("MountainLevelState/character", assets.common.child("textures/character.png"), 27, 40);
-        //this.load.spritesheet("MountainLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
+        this.load.spritesheet("MountainLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
 
         this.load.tilemap("MountainLevelState/map", assets.level.child("mountainLevel/level.json"), null, Phaser.Tilemap.TILED_JSON);
         this.load.image("MountainLevelState/map/tiles", assets.common.child("textures/kennyTiles.png"));
@@ -42,34 +42,59 @@ this.SecretSpies = this.SecretSpies || {};
         var ground = this.objects["ground"] = map.createLayer("tiles");
         ground.resizeWorld();
 
-        /*var coins = this.objects["coins"] = this.add.group();
+        var coinsCollisionGroup = this.physics.p2.createCollisionGroup();
+        var characterCollisionGroup = this.physics.p2.createCollisionGroup();
+        var blocksCollisionGroup = this.physics.p2.createCollisionGroup();
+
+        this.physics.p2.updateBoundsCollisionGroup();
+
+        var coins = this.objects["coins"] = this.add.group();
         coins.enableBody = true;
+        coins.physicsBodyType = Phaser.Physics.P2JS;
 
         map.createFromObjects("coins", 157, "MountainLevelState/coins", 0, true, false, coins);
         coins.callAll("animations.add", "animations", "spin", [0, 1, 2, 3, 4, 5], 10, true);
-        coins.callAll("animations.play", "animations", "spin");*/
-        //map.setCollision([157], true, ground);
+        coins.callAll("animations.play", "animations", "spin");
+        coins.setAll("body.allowGravity", false);
 
+        for (var i = 0; i < coins.length; i++) {
+            
+        }
+        
         map.setCollision([23, 38], true, ground);
-        this.physics.p2.convertTilemap(map, ground);
-        this.physics.p2.gravity.y = 300;
+        map.setCollision([157], true, ground);
 
-        var character = this.objects["character"] = this.add.sprite(25, 3000, "MountainLevelState/character");
+        this.physics.p2.convertTilemap(map, ground);
+        //this.physics.p2.gravity.y = 400;
+
+        var character = this.objects["character"] = this.add.sprite(25, 3300, "MountainLevelState/character");
         SecretSpies.scaler(character, "texture").scale(48, 64);
         this.physics.p2.enable(character);
         this.physics.p2.setBoundsToWorld(true, true, true, true, false);
 
-        //character.body.bounce.y = 0.2;
         character.body.collideWorldBounds = true;
         character.body.fixedRotation = true;
+        character.body.setCollisionGroup(characterCollisionGroup);
+        character.body.collides(coinsCollisionGroup, hitCoin, this);
+        //character.body.collides(blocksCollisionGroup, hitBlock, this);
         character.animations.add('left', [0, 1, 2, 3], 10, true);
         character.animations.add('turn', [4], 20, true);
         character.animations.add('right', [5, 6, 7, 8], 10, true);
+
+        function resetJump() {
+            console.log("wank");
+        }
+
+        map.setTileIndexCallback([23, 38], resetJump);
 
         this.camera.follow(character);
 
         var movementInput = this.objects["movementInput"] = this.input.keyboard.createCursorKeys();
         var jumpButton = this.objects["jumpButton"] = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    }
+
+    function hitCoin() {
+        console.log("wanka");
     }
 
     p.update = function () {
@@ -79,18 +104,20 @@ this.SecretSpies = this.SecretSpies || {};
         var movementInput = this.objects["movementInput"];
         var jumpButton = this.objects["jumpButton"];
 
+        if (character.position.y > 3380) {
+            this.state.start("MountainLevelState");
+        }
+
         character.body.velocity.x = 0;
 
-        if (character.body.checkCollision.up =)
-
         if (movementInput.left.isDown) {
-            character.body.moveLeft(300);
+            character.body.moveLeft(250);
             if (facing != 'left') {
                 character.animations.play('left');
                 this.objects["facing"] = 'left';
             }
         } else if (movementInput.right.isDown) {
-            character.body.moveRight(300);
+            character.body.moveRight(250);
             if (facing != 'right') {
                 character.animations.play('right');
                 this.objects["facing"] = 'right';
@@ -109,9 +136,10 @@ this.SecretSpies = this.SecretSpies || {};
             }
         }
         if (jumpButton.isDown && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
-            character.body.moveUp(400);
+            character.body.moveUp(250);
             jumpTimer = this.time.now + 750;
         }
+
 
         function checkIfCanJump() {
 

@@ -70,7 +70,7 @@ this.SecretSpies = this.SecretSpies || {};
     	var asiaClick = this.add.sprite(550, 150, "WorldMapState/transparentPixel");
     	asiaClick.inputEnabled = true;
     	asiaClick.input.useHandCursor = true;
-    	asiaClick.width = 125
+    	asiaClick.width = 175
     	asiaClick.height = 225	
     	asiaClick.events.onInputDown.add(asiaClicked, this);
     	function asiaClicked() {
