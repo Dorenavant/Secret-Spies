@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="300" height="50" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="tiles" tilewidth="70" tileheight="70">
+  <image source="../../common/textures/kennyTiles.png" width="70" height="10920"/>
+ </tileset>
+ <tileset firstgid="157" name="coins" tilewidth="32" tileheight="32">
+  <image source="../../common/textures/coins.png" width="192" height="32"/>
+ </tileset>
+ <tileset firstgid="163" name="questionBoxes" tilewidth="70" tileheight="70">
+  <image source="../../common/textures/questionBox.png" width="70" height="70"/>
+ </tileset>
+ <layer name="tiles" width="300" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt22+O3CAMhvEcp+o5eqq5wR4in3rRaqVGoq4JmIAx5PlJUWe78wcIecck2eMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAER2zm4AABScySb9+vvvT7/mAMB/7nLqc7Pt4mzYAPgr5dTXzbYysieu37Mb4OANfezNklM70XLqSQ3J3HuOuhY5uf2f5tSuSv2WmzW/ONbsaseHsXynXF21c059s2ZVj/ySn82x9q90TCw17urjKfsl+7Fqv3rLrYPIqratZ/218vFnJftrqXE/yvvs6sw8fgO5b9+8/uuRVdZjy9LenfNLq6lax/k41hwjbU7e/VzzHjvR5v7uWaUZlVPWDLPk2k75VVtT1W7Hsf6Y3PlkHmt2GQft++xtRtZUo3MttXJ29c6qL/HekZXqqRa7HsfpWFFTrbeVsmsFI7LqGpvjiDcOM9qzQ37l5snurPNldiZZsyvtZ7RjVRqVVelcjj4OM7Ik8njk7Fxb1d5j2DKXZ+dSbV2RjkNEo7Mqnc+zx0Bey4JN5Hk8Wu/zPrPzacXM8siqdBxm9D/amKfk/Igs4vytUVsfla613dWRo+59mpVZEc/heGVVWmPN7v8qNdXscdKsWJtaM8NyLFvb4H0NrtfxGmUuemaV7L/HGKT9W0Hkdmr3hEan3ctqve+ylFst+8x6jqx1qxVxTZTjeV027X+kMYgo6jpxleuBWlblvkNzr5Fqsst63+ZI1vwqjU8EXlnlldkrrllWEnkuX2qzKs0a+drS/GxZW1xtyWWZ9XeWfLTUCNrx6inXzln3vFFn2UTK3Z2y6u647H2/wt1zWn9X83lP+tSyr5+ep4ueCb3attq5qlVFzit5/cj6fbzb36poRvfj+72v8bR8jhxjrVb0Ou838lzhm8wamwj7RGtDrl1P1w2lNVVuLGYfMyOPr9r3k2PZ0ia5/6Jr7ePbeOV7+p3n6UfDa0b8HRlsWnMmVxNbz915btDNGqM0qzy+6yzzQzsnPeJca8s5cvlYPlf7Ofd/2ufcfX7ptaO31pzpve88NjJOp9XHnv1foS4HEJfMr1HrQ6/aCsDeRuRImnlkFYAReq0N5fUeAOjpqoPSzGpZG866FgjgXbTryHf3LZ2Z57EGBODtqpGsNdYq9+kB2IO2Piw9nzUggJm0zNLuXaOmAhCRdu8pWQUANn8AuIGN+g==
+  </data>
+ </layer>
+</map>
