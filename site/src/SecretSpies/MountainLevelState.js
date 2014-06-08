@@ -37,7 +37,6 @@ this.SecretSpies = this.SecretSpies || {};
         this.physics.startSystem(Phaser.Physics.P2JS);
 
         var map = this.objects["map"] = this.add.tilemap("MountainLevelState/map");
-        console.log(map);
         map.addTilesetImage("tiles", "MountainLevelState/map/tiles");
 
         var ground = this.objects["ground"] = map.createLayer("tiles");
@@ -49,9 +48,10 @@ this.SecretSpies = this.SecretSpies || {};
         map.createFromObjects("coins", 157, "MountainLevelState/coins", 0, true, false, coins);
         coins.callAll("animations.add", "animations", "spin", [0, 1, 2, 3, 4, 5], 10, true);
         coins.callAll("animations.play", "animations", "spin");*/
+        //map.setCollision([157], true, ground);
+
         map.setCollision([23, 38], true, ground);
         this.physics.p2.convertTilemap(map, ground);
-        //map.setCollision([157], true, ground);
         this.physics.p2.gravity.y = 300;
 
         var character = this.objects["character"] = this.add.sprite(25, 3000, "MountainLevelState/character");
@@ -79,34 +79,18 @@ this.SecretSpies = this.SecretSpies || {};
         var movementInput = this.objects["movementInput"];
         var jumpButton = this.objects["jumpButton"];
 
-        /*
-        this.physics.arcade.collide(character, this.objects["ground"],
-            function (character, block) {
-                this.onFloor = true;
-            },
-            function() {
-                return true;
-            },
-            character
-            );*/
-
-
-        //this.physics.p2.collide(character, this.objects["ground"]);
-
         character.body.velocity.x = 0;
 
-        /*if (character.body.velocity.y > 400) {
-            character.body.velocity.y = 400;
-        } */
+        if (character.body.checkCollision.up =)
 
         if (movementInput.left.isDown) {
-            character.body.moveLeft(500);
+            character.body.moveLeft(300);
             if (facing != 'left') {
                 character.animations.play('left');
                 this.objects["facing"] = 'left';
             }
         } else if (movementInput.right.isDown) {
-            character.body.moveRight(500);
+            character.body.moveRight(300);
             if (facing != 'right') {
                 character.animations.play('right');
                 this.objects["facing"] = 'right';
@@ -124,13 +108,8 @@ this.SecretSpies = this.SecretSpies || {};
                 this.objects["facing"] = 'idle';
             }
         }
-        /*if ((movementInput.up.isDown || jumpButton.isDown) && (character.onFloor || character.body.onFloor()) && this.game.time.now > jumpTimer) {
-            character.body.moveUp(300);
-            jumpTimer = this.game.time.now + 750;
-            character.onFloor = false;
-        }*/
-        if (jumpButton.isDown && this.time.now > jumpTimer && checkIfCanJump()) {
-            character.body.moveUp(300);
+        if (jumpButton.isDown && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
+            character.body.moveUp(400);
             jumpTimer = this.time.now + 750;
         }
 
@@ -142,18 +121,17 @@ this.SecretSpies = this.SecretSpies || {};
             for (var i = 0; i < this.physics.p2.world.narrowphase.contactEquations.length; i++) {
                 var c = this.physics.p2.world.narrowphase.contactEquations[i];
                 if (c.bodyA === character.body.data || c.bodyB === character.body.data) {
-            var d = p2.vec2.dot(c.normalA, yAxis); // Normal dot Y-axis
-            if (c.bodyA === character.body.data) d *= -1;
-            if (d > 0.5) result = true;
+                    var d = p2.vec2.dot(c.normalA, yAxis); // Normal dot Y-axis
+                    if (c.bodyA === character.body.data) d *= -1;
+                    if (d > 0.5) result = true;
+                }
+            }
+            return result;
         }
+
     }
-    return result;
-}
+    p.render = function () {}
 
-}
-p.render = function () {
-}
-
-SecretSpies.MountainLevelState = MountainLevelState;
+    SecretSpies.MountainLevelState = MountainLevelState;
 
 })();
