@@ -18,15 +18,14 @@ this.SecretSpies = this.SecretSpies || {};
         this.load.spritesheet("MountainLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
         this.load.image("MountainLevelState/blocks", assets.level.child("mountainLevel/mountainBlock.png"));
         this.load.spritesheet("MountainLevelState/character", assets.common.child("textures/character.png"), 27, 40);
-        this.load.spritesheet("MountainLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
+        //this.load.spritesheet("MountainLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
 
-        this.load.tilemap("MountainLevelState/map", assets.level.child("mountainLevel/level.json"), null, Phaser.Tilemap.TILED_JSON);
+        this.load.tilemap("MountainLevelState/map", assets.level.child("mountainLevel/mapTest.json"), null, Phaser.Tilemap.TILED_JSON);
         this.load.image("MountainLevelState/map/tiles", assets.common.child("textures/kennyTiles.png"));
 
     }
 
     p.create = function () {
-        //this.world.setBounds(0, 0, 12000, 4000);
         
         this.objects["facing"] = "left";
         this.objects["jumpTimer"] = 0;
@@ -35,6 +34,8 @@ this.SecretSpies = this.SecretSpies || {};
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);
         background.fixedToCamera = true;
 
+        this.physics.startSystem(Phaser.Physics.ARCADE);
+
         var map = this.objects["map"] = this.add.tilemap("MountainLevelState/map");
         console.log(map);
         map.addTilesetImage("tiles", "MountainLevelState/map/tiles");
@@ -42,18 +43,14 @@ this.SecretSpies = this.SecretSpies || {};
         var ground = this.objects["ground"] = map.createLayer("tiles");
         ground.resizeWorld();
 
-        var coins = this.objects["coins"] = this.add.group();
+        /*var coins = this.objects["coins"] = this.add.group();
         coins.enableBody = true;
 
         map.createFromObjects("coins", 157, "MountainLevelState/coins", 0, true, false, coins);
         coins.callAll("animations.add", "animations", "spin", [0, 1, 2, 3, 4, 5], 10, true);
-        coins.callAll("animations.play", "animations", "spin");
-        
+        coins.callAll("animations.play", "animations", "spin");*/
         map.setCollision([23, 38], true, ground);
-        map.setCollision([157], true, ground);
-
-        this.physics.startSystem(Phaser.Physics.ARCADE);
-
+        //map.setCollision([157], true, ground);
         this.physics.arcade.gravity.y = 550;
 
         var character = this.objects["character"] = this.add.sprite(25, 3000, "MountainLevelState/character");
