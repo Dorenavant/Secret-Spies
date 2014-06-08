@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="300" height="50" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="tiles" tilewidth="70" tileheight="70">
+  <image source="../../common/textures/kennyTiles.png" width="70" height="10920"/>
+ </tileset>
+ <tileset firstgid="157" name="coins" tilewidth="32" tileheight="32">
+  <image source="../../common/textures/coins.png" width="192" height="32"/>
+ </tileset>
+ <tileset firstgid="163" name="questionBoxes" tilewidth="70" tileheight="70">
+  <image source="../../common/textures/questionBox.png" width="70" height="70"/>
+ </tileset>
+ <layer name="tiles" width="300" height="50" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20ND6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAvgzqYAAB
+  </data>
+ </layer>
+</map>
