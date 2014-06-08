@@ -41,21 +41,20 @@ this.SecretSpies = this.SecretSpies || {};
 
         var ground = this.objects["ground"] = map.createLayer("tiles");
         ground.resizeWorld();
-        
-        map.setCollision([23, 38], true, ground);
-
-        this.physics.startSystem(Phaser.Physics.ARCADE);
-
-        this.physics.arcade.gravity.y = 550;
 
         var coins = this.objects["coins"] = this.add.group();
         coins.enableBody = true;
 
-        map.createFromObjects("coins", rules["map"]["tiles"]["coins"], "SkylandState/map/coins", 0, true, false, coins);
+        map.createFromObjects("coins", 157, "MountainLevelState/coins", 0, true, false, coins);
         coins.callAll("animations.add", "animations", "spin", [0, 1, 2, 3, 4, 5], 10, true);
         coins.callAll("animations.play", "animations", "spin");
-        this.physics.enable(coins, Phaser.Physics.ARCADE);
-        coins.body.allowGravity = false;
+        
+        map.setCollision([23, 38], true, ground);
+        map.setCollision([157], true, ground);
+
+        this.physics.startSystem(Phaser.Physics.ARCADE);
+
+        this.physics.arcade.gravity.y = 550;
 
         var character = this.objects["character"] = this.add.sprite(25, 3000, "MountainLevelState/character");
         SecretSpies.scaler(character, "texture").scale(48, 64);
@@ -125,7 +124,7 @@ this.SecretSpies = this.SecretSpies || {};
             }
         }
 
-        if ((movementInput.up.isDown || jumpButton.isDown) && character.onFloor && this.game.time.now > jumpTimer) {
+        if ((movementInput.up.isDown || jumpButton.isDown) && (character.onFloor || character.body.onFloor()) && this.game.time.now > jumpTimer) {
             character.body.velocity.y = -300;
             jumpTimer = this.game.time.now + 750;
             character.onFloor = false;
