@@ -18,10 +18,13 @@ this.SecretSpies = this.SecretSpies || {};
         this.load.spritesheet("MountainLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
         this.load.image("MountainLevelState/blocks", assets.level.child("mountainLevel/mountainBlock.png"));
         this.load.spritesheet("MountainLevelState/character", assets.common.child("textures/character.png"), 32, 48);
+
+        this.load.tilemap("MountainLevelState/map", assets.level.child("mountainLevel/map.json"));
+        this.load.image("MountainLevelState/map/tiles", assets.common.child("textures/kennyTiles.png"));
     }
 
     p.create = function () {
-        this.world.setBounds(0, 0, 12000, 4000);
+        //this.world.setBounds(0, 0, 12000, 4000);
         
         this.objects["facing"] = "left";
         this.objects["jumpTimer"] = 0;
@@ -30,13 +33,24 @@ this.SecretSpies = this.SecretSpies || {};
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);
         background.fixedToCamera = true;
 
+        var map = this.objects["map"] = this.add.tilemap("MountainLevelState/map");
+        map.addTilesetImage("layer", "MountainLevelState/map/tiles");
+
+        var ground = this.objects["ground"] = map.createLayer("layer");
+        ground.resizeWorld();
+
+        console.log(map);
+        
+        map.setCollision([39], true, ground);
+
         this.physics.startSystem(Phaser.Physics.ARCADE);
 
         this.physics.arcade.gravity.y = 500;
 
-        var g = this.objects["blocks"] = this.add.group();
 
-        for (var x = 0; x < 1600; x += 40) {
+        //var g = this.objects["blocks"] = this.add.group();
+
+        /*for (var x = 0; x < 1600; x += 40) {
             var block = this.add.sprite(x, 3960, "MountainLevelState/blocks");
             SecretSpies.scaler(block, "texture").scale(40, 40);
             this.physics.enable(block, Phaser.Physics.ARCADE);
@@ -66,7 +80,7 @@ this.SecretSpies = this.SecretSpies || {};
             block.body.allowGravity = false;
         }
 
-        for(var y = 400; y > ; y -= 40) {
+        for(var y = 3800; y > 160; y -= 40) {
             var block = this.add.sprite(80, y, "MountainLevelState/blocks");
             SecretSpies.scaler(block, "texture").scale(40, 40);
             this.physics.enable(block, Phaser.Physics.ARCADE);
@@ -84,7 +98,7 @@ this.SecretSpies = this.SecretSpies || {};
             g.add(block);
             block.body.immovable = true;
             block.body.allowGravity = false;
-        }
+        }*/
 
         var character = this.objects["character"] = this.add.sprite(25, 500, "MountainLevelState/character");
         this.physics.enable(character, Phaser.Physics.ARCADE);
@@ -107,10 +121,19 @@ this.SecretSpies = this.SecretSpies || {};
         var jumpButton = this.objects["jumpButton"];
         var character = this.objects["character"];
         var movementInput = this.objects["movementInput"];
+
+        /*
         this.physics.arcade.collide(character, this.objects["blocks"],
             function (character, block) {
                 character.onFloor = true;
             });
+        */
+        this.physics.arcade.collide(character, this.objects["ground"],
+            function (character, block) {
+                character.onFloor = true;
+            }
+        );
+
         character.body.velocity.x = 0;
 
         if (movementInput.left.isDown) {
@@ -141,14 +164,11 @@ this.SecretSpies = this.SecretSpies || {};
             }
         }
 
+
         if (jumpButton.isDown && character.onFloor && this.game.time.now > jumpTimer) {
             character.body.velocity.y = -250;
             jumpTimer = this.game.time.now + 750;
             character.onFloor = false;
-        }
-        if (jumpButton.isDown && character.body.onFloor() && this.game.time.now > jumpTimer) {
-            character.body.velocity.y = -500;
-            jumpTimer = this.game.time.now + 750;
         }
     }
     p.render = function () {
