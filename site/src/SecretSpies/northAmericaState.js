@@ -15,6 +15,7 @@ this.SecretSpies = this.SecretSpies || {};
     p.preload = function() {
         var assets = SecretSpies.path.assets;
         this.load.image("NorthAmericaState/background", assets.level.child("worldMap/northAmerica.png"));
+        this.load.spritesheet("NorthAmericaState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
         this.load.image("NorthAmericaState/iqaluit", assets.level.child("worldMap/iqaluit.png"));  
         this.load.image("NorthAmericaState/newYork", assets.level.child("worldMap/newYork.png"));
     }
@@ -22,6 +23,17 @@ this.SecretSpies = this.SecretSpies || {};
     p.create = function() {
         var background = this.objects["background"] = this.add.sprite(0, 0, "NorthAmericaState/background");
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);  
+
+        var backButton = this.add.labelButton(30, 30, "NorthAmericaState/buttons",  
+            {
+                "font": "20px Arial", 
+                "fill": "white"
+            }, 
+            function() {
+                this.state.start("WorldMapState");
+            },
+            this, 0, 1, 2, 1);
+        backButton.setText("Back");
 
         var iqaluit = this.objects["iqaluit"] = this.add.sprite(425, 110, "NorthAmericaState/iqaluit");
         iqaluit.width = 125;

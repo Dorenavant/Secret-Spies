@@ -15,6 +15,7 @@ INPUT_FILES := \
 	$(SRC)/AsiaState.js \
 	$(SRC)/AfricaState.js \
 	$(SRC)/WorldMapState.js \
+	$(SRC)/StoryState.js \
 	$(SRC)/MainMenuState.js \
 	\
 	$(SRC)/Bootstrap.js

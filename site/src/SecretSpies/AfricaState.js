@@ -15,6 +15,7 @@ this.SecretSpies = this.SecretSpies || {};
     p.preload = function() {
         var assets = SecretSpies.path.assets;
         this.load.image("AfricaState/background", assets.level.child("worldMap/africa.png"));
+        this.load.spritesheet("AfricaState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
         this.load.image("AfricaState/cairo", assets.level.child("worldMap/cairo.png"));
     }
 
@@ -22,6 +23,17 @@ this.SecretSpies = this.SecretSpies || {};
         var background = this.objects["background"] = this.add.sprite(0, 0, "AfricaState/background");
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);  
 
+        var backButton = this.add.labelButton(150, 30, "AfricaState/buttons",  
+            {
+                "font": "20px Arial", 
+                "fill": "white"
+            }, 
+            function() {
+                this.state.start("WorldMapState");
+            },
+            this, 0, 1, 2, 1);
+        backButton.setText("Back");
+        
         var cairo = this.objects["cairo"] = this.add.sprite(375, 50, "AfricaState/cairo");
         cairo.width = 125;
         cairo.height = 125; 

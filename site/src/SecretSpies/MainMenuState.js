@@ -27,8 +27,8 @@ this.SecretSpies = this.SecretSpies || {};
                 "fill": "white"
             }, 
             function() {
-                this.state.add("WorldMapState", new SecretSpies.WorldMapState());
-                this.state.start("WorldMapState");
+                this.state.add("StoryState", new SecretSpies.StoryState());
+                this.state.start("StoryState");
             }, 
             this, 0, 1, 2, 1);
         playButton.setText("Play");
