@@ -15,6 +15,7 @@ this.SecretSpies = this.SecretSpies || {};
     p.preload = function () {
         var assets = SecretSpies.path.assets;
         this.load.image("IqaluitLevelState/background", assets.level.child("iqaluitLevel/iqaluitBackground.png"));
+        this.load.image("IqaluitLevelState/ui/defaultButton", assets.common.child("ui/defaultButton.png"));
         this.load.spritesheet("IqaluitLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
         this.load.spritesheet("IqaluitLevelState/character", assets.common.child("textures/character.png"), 27, 40);
         this.load.spritesheet("IqaluitLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
@@ -85,7 +86,7 @@ this.SecretSpies = this.SecretSpies || {};
             tileBody.collides(coinsCollisionGroup);
         }
 
-        this.physics.p2.gravity.y = 400;
+        this.physics.p2.gravity.y = 500;
 
         var questionBoxes = this.objects["questionBoxes"] = this.add.group();
         questionBoxes.enableBody = true;
@@ -111,25 +112,24 @@ this.SecretSpies = this.SecretSpies || {};
         var movementInput = this.objects["movementInput"] = this.input.keyboard.createCursorKeys();
         var jumpButton = this.objects["jumpButton"] = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         var coinCounter = this.objects["coinCounter"] = 0;
-
-        var coinCounterDisplay = this.objects["coinCounterDisplay"] = this.add.labelButton(20, 20, "IqaluitLevelState/buttons",
+        
+        var coinCounterDisplay = this.objects["coinCounterDisplay"] = this.add.text(20, 20, this.objects["coinCounter"],
             {
-                "font": "50px Arial", 
-                "fill": "white"
-            }, 
-            function() {
-                this.state.start("WorldMapState");
-            },
-            this, 0, 1, 2, 1);
+                "font": "45px monospace", 
+                "fill": "#FFFFFF",
+                "align": "center",
+                "stroke": "#000000",
+                "strokeThickness": 3
+            }
+        );
         coinCounterDisplay.fixedToCamera = true;
-        SecretSpies.scaler(coinCounterDisplay, "texture").scale(50, 50);
+        
     }
 
     function hitCoin(body1, body2) {
-        var coinCounter = this.objects["coinCounter"];
-        coinCounter++;
-        console.log(coinCounter);
-        body2.sprite.destroy();
+        var coinCounter = ++this.objects["coinCounter"];
+        this.objects["coinCounterDisplay"].setText(coinCounter.toString());
+        body2.sprite.kill();
     }
 
     /*function hitTile() {
@@ -144,7 +144,7 @@ this.SecretSpies = this.SecretSpies || {};
 
     function hitQuestionBox(body1, body2) {
 
-        body2.sprite.destroy();
+        body2.sprite.kill();
     }
     p.update = function () {
         var facing = this.objects["facing"];
@@ -168,13 +168,13 @@ this.SecretSpies = this.SecretSpies || {};
         character.body.velocity.x = 0;
 
         if (movementInput.left.isDown) {
-            character.body.moveLeft(325);
+            character.body.moveLeft(300);
             if (facing != 'left') {
                 character.animations.play('left');
                 this.objects["facing"] = 'left';
             }
         } else if (movementInput.right.isDown) {
-            character.body.moveRight(500);
+            character.body.moveRight(300);
             if (facing != 'right') {
                 character.animations.play('right');
                 this.objects["facing"] = 'right';
@@ -193,7 +193,7 @@ this.SecretSpies = this.SecretSpies || {};
             }
         }
         if (jumpButton.isDown && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
-            character.body.moveUp(300);
+            character.body.moveUp(500);
             jumpTimer = this.time.now + 750;
         }
 

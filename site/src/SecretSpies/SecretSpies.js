@@ -25,6 +25,161 @@ this.SecretSpies = this.SecretSpies || {};
         _extend(child, parent);
     }
 
+    var LabelButton = function(game, x, y, key, style, callback, callbackContext, overFrame, outFrame, downFrame, upFrame) {
+        Phaser.Button.call(this, game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame);
+        style = style || {};
+
+        this.text = new Phaser.Text(game, 0, 0, "Label", style);
+        this.addChild(this.text);
+        this.setText("Label");
+    }
+
+    LabelButton.prototype = Object.create(Phaser.Button.prototype);
+    LabelButton.prototype.constructor = LabelButton;
+
+    var LabelSprite = function(game, x, y, key, style, frame) {
+        Phaser.Sprite.call(this, game, x, y, key, frame);
+        style = style || {};
+
+        this.text = new Phaser.Text(game, 0, 0, "Label", style);
+        this.addChild(this.text);
+        this.setText("Label");
+    }
+
+    LabelSprite.prototype = Object.create(Phaser.Sprite.prototype);
+    LabelSprite.prototype.constructor = LabelSprite;
+
+    LabelButton.prototype.setText = LabelSprite.prototype.setText = function(text) {
+        this.text.setText(text);
+        this.text.x = Math.floor((this.width - this.text.width) * 0.5);
+        this.text.y = Math.floor((this.height - this.text.height) * 0.5);
+    }
+
+    SecretSpies.ui = SecretSpies.ui || {};
+
+    SecretSpies.ui.LabelButton = LabelButton;
+    SecretSpies.ui.LabelSprite = LabelSprite;
+
+    Phaser.GameObjectFactory.prototype.labelButton = function (x, y, key, style, 
+        callback, callbackContext, overFrame, outFrame, downFrame, upFrame, group) {
+
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.add(new SecretSpies.ui.LabelButton(this.game, x, y, key, style, 
+            callback, callbackContext, overFrame, outFrame, downFrame, upFrame));
+    }
+
+    Phaser.GameObjectFactory.prototype.labelSprite = function (x, y, key, style, frame, group) {
+
+        if (typeof group === 'undefined') { group = this.world; }
+
+        var create = function(x, y, key, style, frame, exists) {
+            if (typeof exists === 'undefined') { exists = true; }
+
+            var child = new SecretSpies.ui.LabelSprite(this.game, x, y, key, frame);
+
+            if (this.enableBody) {
+                this.game.physics.enable(child, this.physicsBodyType);
+            }
+
+            child.exists = exists;
+            child.visible = exists;
+            child.alive = exists;
+
+            this.addChild(child);
+
+            child.z = this.children.length;
+
+            if (child.events) {
+                child.events.onAddedToGroup.dispatch(child, this);
+            }
+
+            if (this.cursor === null) {
+                this.cursor = child;
+            }
+
+            return child;
+        }
+        return create.call(group, x, y, key, style, frame);
+    }
+
+    // var LabelButton = function(game, x, y, key, style, callback, callbackContext, overFrame, outFrame, downFrame, upFrame) {
+    //     Phaser.Button.call(this, game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame);
+    //     style = style || {};
+
+    //     this.text = new Phaser.Text(game, 0, 0, "Label", style);
+    //     this.addChild(this.text);
+    //     this.setText("Label");
+    // }
+
+    // LabelButton.prototype = Object.create(Phaser.Button.prototype);
+    // LabelButton.prototype.constructor = LabelButton;
+
+    // var LabelSprite = function(game, x, y, key, style, frame) {
+    //     Phaser.Sprite.call(this, game, x, y, key, frame);
+
+    //     this.text = new Phaser.Text(game, 0, 0, "Label", style);
+    //     this.addChild(this.text);
+    //     this.setText("Label");
+    // }
+
+    // LabelSprite.prototype = Object.create(Phaser.Sprite.prototype);
+    // LabelSprite.prototype.constructor = LabelSprite;
+
+    // LabelButton.prototype.setText = LabelSprite.prototype.setText = function(text) {
+    //     this.text.setText(text);
+    //     this.text.x = Math.floor((this.width - this.text.width) * 0.5);
+    //     this.text.y = Math.floor((this.height - this.text.height) * 0.5);
+    // }
+
+    // SecretSpies.ui = SecretSpies.ui || {};
+
+    // SecretSpies.ui.LabelButton = LabelButton;
+    // SecretSpies.ui.LabelSprite = LabelSprite;
+
+    // Phaser.GameObjectFactory.prototype.labelButton = function (x, y, key, style, 
+    //     callback, callbackContext, overFrame, outFrame, downFrame, upFrame, group) {
+
+    //     if (typeof group === 'undefined') { group = this.world; }
+
+    //     return group.add(new SecretSpies.ui.LabelButton(this.game, x, y, key, style, 
+    //         callback, callbackContext, overFrame, outFrame, downFrame, upFrame));
+    // }
+
+    // Phaser.GameObjectFactory.prototype.labelSprite = function (x, y, key, style, frame, group) {
+
+    //     if (typeof group === 'undefined') { group = this.world; }
+
+    //     var create = function(x, y, key, style, frame, exists) {
+    //         if (typeof exists === 'undefined') { exists = true; }
+
+    //         var child = new SecretSpies.ui.LabelSprite(this.game, x, y, key, frame);
+
+    //         if (this.enableBody) {
+    //             this.game.physics.enable(child, this.physicsBodyType);
+    //         }
+
+    //         child.exists = exists;
+    //         child.visible = exists;
+    //         child.alive = exists;
+
+    //         this.addChild(child);
+
+    //         child.z = this.children.length;
+
+    //         if (child.events) {
+    //             child.events.onAddedToGroup.dispatch(child, this);
+    //         }
+
+    //         if (this.cursor === null) {
+    //             this.cursor = child;
+    //         }
+
+    //         return child;
+    //     }
+    //     return create.call(group, x, y, key, style, frame);
+    // }
+
 
     SecretSpies.scaler = function(obj, subObj) {
         var subObjAvailable = (typeof subObj !== "undefined");
@@ -43,52 +198,6 @@ this.SecretSpies = this.SecretSpies || {};
                 
             }
         }
-    }
-
-    var LabelButton = function(game, x, y, key, style, callback, callbackContext, overFrame, outFrame, downFrame, upFrame) {
-        Phaser.Button.call(this, game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame);
-
-        style = style || {
-            "font": "10px Arial",
-            "fill": "black"
-        };
-
-        this.label = new Phaser.Text(game, 0, 0, "Label", style);
-        this.addChild(this.label);
-        this.setText("Label");
-    }
-
-    LabelButton.prototype = Object.create(Phaser.Button.prototype);
-    LabelButton.prototype.constructor = LabelButton;
-
-    LabelButton.prototype.setText = function(label) {
-        this.label.setText(label);
-        this.label.x = Math.floor((this.width - this.label.width) * 0.5);
-        this.label.y = Math.floor((this.height - this.label.height) * 0.5);
-    }
-
-    SecretSpies.ui = SecretSpies.ui || {};
-
-    SecretSpies.ui.LabelButton = LabelButton;
-
-    Phaser.GameObjectFactory.prototype.labelButton = function (x, y, key, style, 
-        callback, callbackContext, overFrame, outFrame, downFrame, upFrame, group) {
-
-        if (typeof group === 'undefined') { group = this.world; }
-
-        return group.add(new SecretSpies.ui.LabelButton(this.game, x, y, key, style, 
-            callback, callbackContext, overFrame, outFrame, downFrame, upFrame));
-
-    }
-
-    var physicsTypeMap = {
-        "p2": Phaser.Physics.P2JS,
-        "arcade": Phaser.Physics.ARCADE,
-        "ninja": Phaser.Physics.NINJA
-    }
-
-    SecretSpies.mapPhysicsType = function(name) {
-        return physicsTypeMap[name.toLowerCase()];
     }
 
     SecretSpies.property = SecretSpies.property || {};
