@@ -3,24 +3,24 @@ this.SecretSpies = this.SecretSpies || {};
 (function (undefined) {
     "use strict";
 
-    var IqaluitLevelState = function () {
+    var BeijingLevelState = function () {
         this.objects = {};
         this._cachedValues = {};
     }
 
-    SecretSpies.extend(IqaluitLevelState, SecretSpies.GameState);
+    SecretSpies.extend(BeijingLevelState, SecretSpies.GameState);
 
-    var p = IqaluitLevelState.prototype;
+    var p = BeijingLevelState.prototype;
 
     p.preload = function () {
         var assets = SecretSpies.path.assets;
-        this.load.image("IqaluitLevelState/background", assets.level.child("iqaluitLevel/iqaluitBackground.png"));
-        this.load.spritesheet("IqaluitLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
-        this.load.spritesheet("IqaluitLevelState/character", assets.common.child("textures/character.png"), 27, 40);
-        this.load.spritesheet("IqaluitLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
+        this.load.image("BeijingLevelState/background", assets.level.child("beijingLevel/beijingBackground.png"));
+        this.load.spritesheet("BeijingLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
+        this.load.spritesheet("BeijingLevelState/character", assets.common.child("textures/character.png"), 27, 40);
+        this.load.spritesheet("BeijingLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
 
-        this.load.tilemap("IqaluitLevelState/map", assets.level.child("iqaluitLevel/level.json"), null, Phaser.Tilemap.TILED_JSON);
-        this.load.image("IqaluitLevelState/map/tiles", assets.common.child("textures/kennyTiles.png"));
+        this.load.tilemap("BeijingLevelState/map", assets.level.child("beijingLevel/level.json"), null, Phaser.Tilemap.TILED_JSON);
+        this.load.image("BeijingLevelState/map/tiles", assets.common.child("textures/kennyTiles.png"));
 
     }
 
@@ -29,14 +29,14 @@ this.SecretSpies = this.SecretSpies || {};
         this.objects["facing"] = "left";
         this.objects["jumpTimer"] = 0;
 
-        var background = this.objects["background"] = this.add.sprite(0, 0, "IqaluitLevelState/background");
+        var background = this.objects["background"] = this.add.sprite(0, 0, "BeijingLevelState/background");
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);
         background.fixedToCamera = true;
 
         this.physics.startSystem(Phaser.Physics.P2JS);
 
-        var map = this.objects["map"] = this.add.tilemap("IqaluitLevelState/map");
-        map.addTilesetImage("tiles", "IqaluitLevelState/map/tiles");
+        var map = this.objects["map"] = this.add.tilemap("BeijingLevelState/map");
+        map.addTilesetImage("tiles", "BeijingLevelState/map/tiles");
 
         var ground = this.objects["ground"] = map.createLayer("tiles");
         ground.resizeWorld();
@@ -50,7 +50,7 @@ this.SecretSpies = this.SecretSpies || {};
         coins.enableBody = true;
         coins.physicsBodyType = Phaser.Physics.P2JS;
 
-        map.createFromObjects("coins", 157, "IqaluitLevelState/coins", 0, true, false, coins);
+        map.createFromObjects("coins", 157, "BeijingLevelState/coins", 0, true, false, coins);
         coins.callAll("animations.add", "animations", "spin", [0, 1, 2, 3, 4, 5], 10, true);
         coins.callAll("animations.play", "animations", "spin");
         coins.forEach(function(coin){
@@ -63,7 +63,7 @@ this.SecretSpies = this.SecretSpies || {};
         this.physics.p2.convertTilemap(map, ground);
         this.physics.p2.gravity.y = 400;
 
-        var character = this.objects["character"] = this.add.sprite(25, 3300, "IqaluitLevelState/character");
+        var character = this.objects["character"] = this.add.sprite(25, 3300, "BeijingLevelState/character");
         SecretSpies.scaler(character, "texture").scale(48, 64);
         this.physics.p2.enable(character);
         this.physics.p2.setBoundsToWorld(true, true, true, true, false);
@@ -98,7 +98,7 @@ this.SecretSpies = this.SecretSpies || {};
         var jumpButton = this.objects["jumpButton"];
 
         if (character.position.y > 3380) {
-            this.state.start("IqaluitLevelState");
+            this.state.start("BeijingLevelState");
         }
 
         character.body.velocity.x = 0;
@@ -153,6 +153,6 @@ this.SecretSpies = this.SecretSpies || {};
     }
     p.render = function () {}
 
-    SecretSpies.IqaluitLevelState = IqaluitLevelState;
+    SecretSpies.BeijingLevelState = BeijingLevelState;
 
 })();

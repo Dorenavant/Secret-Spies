@@ -29,8 +29,8 @@ this.SecretSpies = this.SecretSpies || {};
         beijing.input.useHandCursor = true;
         beijing.events.onInputDown.add(beijingClicked, this);
         function beijingClicked() {
-            this.state.add("MountainLevelState", new SecretSpies.MountainLevelState);
-            this.state.start("MountainLevelState");
+            this.state.add("BeijingLevelState", new SecretSpies.BeijingLevelState);
+            this.state.start("BeijingLevelState");
         }  
     }
 

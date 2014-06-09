@@ -11,6 +11,7 @@ INPUT_FILES := \
 	$(SRC)/IqaluitLevelState.js \
 	$(SRC)/NorthAmericaState.js \
 	$(SRC)/EuropeState.js \
+	$(SRC)/BeijingLevelState.js \
 	$(SRC)/AsiaState.js \
 	$(SRC)/AfricaState.js \
 	$(SRC)/WorldMapState.js \
