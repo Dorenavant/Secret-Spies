@@ -91,16 +91,15 @@ this.SecretSpies = this.SecretSpies || {};
         questionBoxes.enableBody = true;
         questionBoxes.physicsBodyType = Phaser.Physics.P2JS;
 
-        map.createFromObjects("questionBoxes", 163, "IqaluitLevelState/questionBoxes");
-        questionBoxes.forEach(function(questionBox) {
+        map.createFromObjects("questionBoxes", 163, "IqaluitLevelState/questionBoxes", 0, true, false, questionBoxes);
+        questionBoxes.forEach(function(questionBox){
             questionBox.body.static = true;
-            questionBox.body.setCircle(20);
             questionBox.body.setCollisionGroup(questionBoxCollisionGroup);
             questionBox.body.collides(characterCollisionGroup);
             questionBox.body.collides(tilesCollisionGroup);
         }, this);
 
-        character.body.collides(tilesCollisionGroup, hitTile, this);
+        character.body.collides(tilesCollisionGroup);//, hitTile, this);
         character.body.collides(coinsCollisionGroup, hitCoin, this);
         character.body.collides(questionBoxCollisionGroup, hitQuestionBox, this);
         character.animations.add('left', [0, 1, 2, 3], 10, true);
@@ -133,7 +132,7 @@ this.SecretSpies = this.SecretSpies || {};
         body2.sprite.destroy();
     }
 
-    function hitTile() {
+    /*function hitTile() {
         var jumpButton = this.objects["jumpButton"]
         var jumpTimer = this.objects["jumpTimer"]
         var character = this.objects["character"];
@@ -141,10 +140,11 @@ this.SecretSpies = this.SecretSpies || {};
             character.body.moveUp(275);
             jumpTimer = this.time.now + 750;
         }
-    }
+    }*/
 
-    function hitQuestionBox() {
-        
+    function hitQuestionBox(body1, body2) {
+
+        body2.sprite.destroy();
     }
     p.update = function () {
         var facing = this.objects["facing"];
@@ -168,13 +168,13 @@ this.SecretSpies = this.SecretSpies || {};
         character.body.velocity.x = 0;
 
         if (movementInput.left.isDown) {
-            character.body.moveLeft(350);
+            character.body.moveLeft(325);
             if (facing != 'left') {
                 character.animations.play('left');
                 this.objects["facing"] = 'left';
             }
         } else if (movementInput.right.isDown) {
-            character.body.moveRight(350);
+            character.body.moveRight(500);
             if (facing != 'right') {
                 character.animations.play('right');
                 this.objects["facing"] = 'right';
