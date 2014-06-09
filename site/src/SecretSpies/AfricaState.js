@@ -23,7 +23,7 @@ this.SecretSpies = this.SecretSpies || {};
         var background = this.objects["background"] = this.add.sprite(0, 0, "AfricaState/background");
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);  
 
-        var backButton = this.add.labelButton(150, 30, "AfricaState/buttons",  
+        var backButton = this.add.labelButton(180, 30, "AfricaState/buttons",  
             {
                 "font": "20px Arial", 
                 "fill": "white"
