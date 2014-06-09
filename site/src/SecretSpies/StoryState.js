@@ -21,7 +21,7 @@ this.SecretSpies = this.SecretSpies || {};
     p.create = function() {
         var background = this.objects["background"] = this.add.sprite(0, 0, "StoryState/background");
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);  
-        var nextButton = this.add.labelButton(this.world.centerX + 175, 525, "StoryState/buttons", 
+        var nextButton = this.add.labelButton(this.world.centerX + 175, 500, "StoryState/buttons", 
             {
                 "font": "20px Arial", 
                 "fill": "white"

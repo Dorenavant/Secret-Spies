@@ -41,8 +41,8 @@ this.SecretSpies = this.SecretSpies || {};
         cairo.input.useHandCursor = true;
         cairo.events.onInputDown.add(cairoClicked, this);
         function cairoClicked() {
-            this.state.add("MountainLevelState", new SecretSpies.MountainLevelState);
-            this.state.start("MountainLevelState");
+            this.state.add("CairoLevelState", new SecretSpies.CairoLevelState);
+            this.state.start("CairoLevelState");
         }  
     }
 

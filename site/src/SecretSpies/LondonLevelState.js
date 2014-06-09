@@ -3,26 +3,26 @@ this.SecretSpies = this.SecretSpies || {};
 (function (undefined) {
     "use strict";
 
-    var IqaluitLevelState = function () {
+    var LondonLevelState = function () {
         this.objects = {};
         this._cachedValues = {};
     }
 
-    SecretSpies.extend(IqaluitLevelState, SecretSpies.GameState);
+    SecretSpies.extend(LondonLevelState, SecretSpies.GameState);
 
-    var p = IqaluitLevelState.prototype;
+    var p = LondonLevelState.prototype;
 
     p.preload = function () {
         var assets = SecretSpies.path.assets;
-        this.load.image("IqaluitLevelState/background", assets.level.child("iqaluitLevel/iqaluitBackground.png"));
-        this.load.image("IqaluitLevelState/ui/defaultButton", assets.common.child("ui/defaultButton.png"));
-        this.load.spritesheet("IqaluitLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
-        this.load.spritesheet("IqaluitLevelState/character", assets.common.child("textures/character.png"), 27, 40);
-        this.load.spritesheet("IqaluitLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
-        this.load.image("IqaluitLevelState/questionBoxes", assets.common.child("textures/questionBox.png"));
+        this.load.image("LondonLevelState/background", assets.level.child("londonLevel/londonBackground.png"));
+        this.load.image("LondonLevelState/ui/defaultButton", assets.common.child("ui/defaultButton.png"));
+        this.load.spritesheet("LondonLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
+        this.load.spritesheet("LondonLevelState/character", assets.common.child("textures/character.png"), 27, 40);
+        this.load.spritesheet("LondonLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
+        this.load.image("LondonLevelState/questionBoxes", assets.common.child("textures/questionBox.png"));
 
-        this.load.tilemap("IqaluitLevelState/map", assets.level.child("iqaluitLevel/iqaluitLevel.json"), null, Phaser.Tilemap.TILED_JSON);
-        this.load.image("IqaluitLevelState/map/tiles", assets.common.child("textures/kennyTiles.png"));
+        this.load.tilemap("LondonLevelState/map", assets.level.child("londonLevel/londonLevel.json"), null, Phaser.Tilemap.TILED_JSON);
+        this.load.image("LondonLevelState/map/tiles", assets.common.child("textures/kennyTiles.png"));
 
     }
 
@@ -31,15 +31,15 @@ this.SecretSpies = this.SecretSpies || {};
         this.objects["facing"] = "left";
         this.objects["jumpTimer"] = 0;
 
-        var background = this.objects["background"] = this.add.sprite(0, 0, "IqaluitLevelState/background");
+        var background = this.objects["background"] = this.add.sprite(0, 0, "LondonLevelState/background");
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);
         background.fixedToCamera = true;
 
         this.physics.startSystem(Phaser.Physics.P2JS);
         this.physics.p2.setImpactEvents(true);
 
-        var map = this.objects["map"] = this.add.tilemap("IqaluitLevelState/map");
-        map.addTilesetImage("tiles", "IqaluitLevelState/map/tiles");
+        var map = this.objects["map"] = this.add.tilemap("LondonLevelState/map");
+        map.addTilesetImage("tiles", "LondonLevelState/map/tiles");
 
         var ground = this.objects["ground"] = map.createLayer("tiles");
         ground.resizeWorld();
@@ -55,7 +55,7 @@ this.SecretSpies = this.SecretSpies || {};
         coins.enableBody = true;
         coins.physicsBodyType = Phaser.Physics.P2JS;
 
-        map.createFromObjects("coins", 157, "IqaluitLevelState/coins", 0, true, false, coins);
+        map.createFromObjects("coins", 157, "LondonLevelState/coins", 0, true, false, coins);
         coins.callAll("animations.add", "animations", "spin", [0, 1, 2, 3, 4, 5], 10, true);
         coins.callAll("animations.play", "animations", "spin");
         coins.forEach(function(coin){
@@ -66,13 +66,13 @@ this.SecretSpies = this.SecretSpies || {};
             coin.body.collides(tilesCollisionGroup);
         }, this);
         
-        map.setCollision([23, 38], true, ground);
+        map.setCollision([80, 95], true, ground);
         map.setCollision([157], true, ground);
         map.setCollision([163], true, ground);
 
         var mapTiles = this.physics.p2.convertTilemap(map, ground);
 
-        var character = this.objects["character"] = this.add.sprite(25, 3300, "IqaluitLevelState/character");
+        var character = this.objects["character"] = this.add.sprite(25, 3100, "LondonLevelState/character");
         SecretSpies.scaler(character, "texture").scale(48, 64);
         this.physics.p2.enable(character);
         this.physics.p2.setBoundsToWorld(true, true, true, true, false);
@@ -92,7 +92,7 @@ this.SecretSpies = this.SecretSpies || {};
         questionBoxes.enableBody = true;
         questionBoxes.physicsBodyType = Phaser.Physics.P2JS;
 
-        map.createFromObjects("questionBoxes", 163, "IqaluitLevelState/questionBoxes", 0, true, false, questionBoxes);
+        map.createFromObjects("questionBoxes", 163, "LondonLevelState/questionBoxes", 0, true, false, questionBoxes);
         questionBoxes.forEach(function(questionBox){
             questionBox.body.static = true;
             questionBox.body.setCollisionGroup(questionBoxCollisionGroup);
@@ -164,11 +164,11 @@ this.SecretSpies = this.SecretSpies || {};
         }
 
         if (character.position.y > 3380) {
-            this.state.start("IqaluitLevelState");
+            this.state.start("LondonLevelState");
         }
 
         if(character.position.x < 0) {
-            this.state.start("IqaluitLevelState");
+            this.state.start("LondonLevelState");
         }
 
         character.body.velocity.x = 0;
@@ -221,6 +221,6 @@ this.SecretSpies = this.SecretSpies || {};
     }
     p.render = function () {}
 
-    SecretSpies.IqaluitLevelState = IqaluitLevelState;
+    SecretSpies.LondonLevelState = LondonLevelState;
 
 })();

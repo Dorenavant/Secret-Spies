@@ -15,11 +15,13 @@ this.SecretSpies = this.SecretSpies || {};
     p.preload = function () {
         var assets = SecretSpies.path.assets;
         this.load.image("BeijingLevelState/background", assets.level.child("beijingLevel/beijingBackground.png"));
+        this.load.image("BeijingLevelState/ui/defaultButton", assets.common.child("ui/defaultButton.png"));
         this.load.spritesheet("BeijingLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
         this.load.spritesheet("BeijingLevelState/character", assets.common.child("textures/character.png"), 27, 40);
         this.load.spritesheet("BeijingLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
+        this.load.image("BeijingLevelState/questionBoxes", assets.common.child("textures/questionBox.png"));
 
-        this.load.tilemap("BeijingLevelState/map", assets.level.child("beijingLevel/level.json"), null, Phaser.Tilemap.TILED_JSON);
+        this.load.tilemap("BeijingLevelState/map", assets.level.child("beijingLevel/beijingLevel.json"), null, Phaser.Tilemap.TILED_JSON);
         this.load.image("BeijingLevelState/map/tiles", assets.common.child("textures/kennyTiles.png"));
 
     }
@@ -34,6 +36,7 @@ this.SecretSpies = this.SecretSpies || {};
         background.fixedToCamera = true;
 
         this.physics.startSystem(Phaser.Physics.P2JS);
+        this.physics.p2.setImpactEvents(true);
 
         var map = this.objects["map"] = this.add.tilemap("BeijingLevelState/map");
         map.addTilesetImage("tiles", "BeijingLevelState/map/tiles");
@@ -43,6 +46,8 @@ this.SecretSpies = this.SecretSpies || {};
 
         var coinsCollisionGroup = this.physics.p2.createCollisionGroup();
         var characterCollisionGroup = this.physics.p2.createCollisionGroup();
+        var tilesCollisionGroup = this.physics.p2.createCollisionGroup();
+        var questionBoxCollisionGroup = this.physics.p2.createCollisionGroup();
 
         this.physics.p2.updateBoundsCollisionGroup();
 
@@ -55,62 +60,132 @@ this.SecretSpies = this.SecretSpies || {};
         coins.callAll("animations.play", "animations", "spin");
         coins.forEach(function(coin){
             coin.body.static = true;
+            coin.body.setCircle(20);
+            coin.body.setCollisionGroup(coinsCollisionGroup);
+            coin.body.collides(characterCollisionGroup);
+            coin.body.collides(tilesCollisionGroup);
         }, this);
         
-        map.setCollision([23, 38], true, ground);
+        map.setCollision([137, 122], true, ground);
         map.setCollision([157], true, ground);
+        map.setCollision([163], true, ground);
 
-        this.physics.p2.convertTilemap(map, ground);
-        this.physics.p2.gravity.y = 400;
+        var mapTiles = this.physics.p2.convertTilemap(map, ground);
 
-        var character = this.objects["character"] = this.add.sprite(25, 3300, "BeijingLevelState/character");
+        var character = this.objects["character"] = this.add.sprite(25, 2800, "BeijingLevelState/character");
         SecretSpies.scaler(character, "texture").scale(48, 64);
         this.physics.p2.enable(character);
         this.physics.p2.setBoundsToWorld(true, true, true, true, false);
-
-        character.body.collideWorldBounds = true;
         character.body.fixedRotation = true;
+        character.body.setCollisionGroup(characterCollisionGroup);
+
+        for (var i = 0; i < mapTiles.length; i++) {
+            var tileBody = mapTiles[i];
+            tileBody.setCollisionGroup(tilesCollisionGroup);
+            tileBody.collides(characterCollisionGroup);
+            tileBody.collides(coinsCollisionGroup);
+        }
+
+        this.physics.p2.gravity.y = 500;
+
+        var questionBoxes = this.objects["questionBoxes"] = this.add.group();
+        questionBoxes.enableBody = true;
+        questionBoxes.physicsBodyType = Phaser.Physics.P2JS;
+
+        map.createFromObjects("questionBoxes", 163, "BeijingLevelState/questionBoxes", 0, true, false, questionBoxes);
+        questionBoxes.forEach(function(questionBox){
+            questionBox.body.static = true;
+            questionBox.body.setCollisionGroup(questionBoxCollisionGroup);
+            questionBox.body.collides(characterCollisionGroup);
+            questionBox.body.collides(tilesCollisionGroup);
+        }, this);
+
+        character.body.collides(tilesCollisionGroup);//, hitTile, this);
+        character.body.collides(coinsCollisionGroup, hitCoin, this);
+        character.body.collides(questionBoxCollisionGroup, hitQuestionBox, this);
         character.animations.add('left', [0, 1, 2, 3], 10, true);
         character.animations.add('turn', [4], 20, true);
         character.animations.add('right', [5, 6, 7, 8], 10, true);  
-
-        map.setTileIndexCallback([23, 38], resetJump);
 
         this.camera.follow(character);
 
         var movementInput = this.objects["movementInput"] = this.input.keyboard.createCursorKeys();
         var jumpButton = this.objects["jumpButton"] = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        var coinCounter = this.objects["coinCounter"] = 0;
+        
+        var coinCounterDisplay = this.objects["coinCounterDisplay"] = this.add.text(20, 20, this.objects["coinCounter"],
+            {
+                "font": "45px monospace", 
+                "fill": "#FFFFFF",
+                "align": "center",
+                "stroke": "#000000",
+                "strokeThickness": 3
+            }
+        );
+        coinCounterDisplay.fixedToCamera = true;
+
+        var backButton = this.add.labelButton(600, 20, "BeijingLevelState/buttons", 
+            {
+                "font": "20px Arial", 
+                "fill": "white"
+            }, 
+            function() {
+                this.state.start("WorldMapState");
+            }, 
+            this, 0, 1, 2, 1);
+        backButton.fixedToCamera = true;
+        backButton.setText("Back");
     }
 
-    function hitCoin() {
-        console.log("wanka");
+    function hitCoin(body1, body2) {
+        var coinCounter = ++this.objects["coinCounter"];
+        this.objects["coinCounterDisplay"].setText(coinCounter.toString());
+        body2.sprite.kill();
     }
 
-    function resetJump() {
-        console.log("wank");
-    }
+    /*function hitTile() {
+        var jumpButton = this.objects["jumpButton"]
+        var jumpTimer = this.objects["jumpTimer"]
+        var character = this.objects["character"];
+        if (jumpButton.isDown && this.time.now > jumpTimer) {
+            character.body.moveUp(275);
+            jumpTimer = this.time.now + 750;
+        }
+    }*/
 
+    function hitQuestionBox(body1, body2) {
+
+        body2.sprite.kill();
+    }
     p.update = function () {
         var facing = this.objects["facing"];
         var jumpTimer = this.objects["jumpTimer"];
         var character = this.objects["character"];
         var movementInput = this.objects["movementInput"];
         var jumpButton = this.objects["jumpButton"];
+        var coinCounter = this.objects["coinCounter"];
+        var coinCounterDisplay = this.objects["coinCounterDisplay"];
+
+        coinCounterDisplay.setText(coinCounter);
 
         if (character.position.y > 3380) {
+            this.state.start("BeijingLevelState");
+        }
+
+        if(character.position.x < 0) {
             this.state.start("BeijingLevelState");
         }
 
         character.body.velocity.x = 0;
 
         if (movementInput.left.isDown) {
-            character.body.moveLeft(250);
+            character.body.moveLeft(400);
             if (facing != 'left') {
                 character.animations.play('left');
                 this.objects["facing"] = 'left';
             }
         } else if (movementInput.right.isDown) {
-            character.body.moveRight(250);
+            character.body.moveRight(400);
             if (facing != 'right') {
                 character.animations.play('right');
                 this.objects["facing"] = 'right';
@@ -128,14 +203,12 @@ this.SecretSpies = this.SecretSpies || {};
                 this.objects["facing"] = 'idle';
             }
         }
-        if (jumpButton.isDown && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
-            character.body.moveUp(300);
+        if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
+            character.body.moveUp(400);
             jumpTimer = this.time.now + 750;
         }
 
-
         function checkIfCanJump() {
-
             var yAxis = p2.vec2.fromValues(0, 1);
             var result = false;
 

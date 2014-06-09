@@ -8,11 +8,14 @@ INPUT_FILES := \
 	$(SRC)/SecretSpies.js \
 	$(SRC)/GameState.js \
 	$(SRC)/ShopState.js \
+	$(SRC)/NewYorkLevelState.js \
 	$(SRC)/IqaluitLevelState.js \
 	$(SRC)/NorthAmericaState.js \
+	$(SRC)/LondonLevelState.js \
 	$(SRC)/EuropeState.js \
 	$(SRC)/BeijingLevelState.js \
 	$(SRC)/AsiaState.js \
+	$(SRC)/CairoLevelState.js \
 	$(SRC)/AfricaState.js \
 	$(SRC)/WorldMapState.js \
 	$(SRC)/StoryState.js \

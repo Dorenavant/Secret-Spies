@@ -53,8 +53,8 @@ this.SecretSpies = this.SecretSpies || {};
         newYork.input.useHandCursor = true;
         newYork.events.onInputDown.add(newYorkClicked, this);
         function newYorkClicked() {
-            this.state.add("IqaluitLevelState", new SecretSpies.IqaluitLevelState);
-            this.state.start("IqaluitLevelState");
+            this.state.add("NewYorkLevelState", new SecretSpies.NewYorkLevelState);
+            this.state.start("NewYorkLevelState");
         }   
     }
 

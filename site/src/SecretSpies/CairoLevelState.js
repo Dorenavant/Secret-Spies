@@ -3,26 +3,26 @@ this.SecretSpies = this.SecretSpies || {};
 (function (undefined) {
     "use strict";
 
-    var IqaluitLevelState = function () {
+    var CairoLevelState = function () {
         this.objects = {};
         this._cachedValues = {};
     }
 
-    SecretSpies.extend(IqaluitLevelState, SecretSpies.GameState);
+    SecretSpies.extend(CairoLevelState, SecretSpies.GameState);
 
-    var p = IqaluitLevelState.prototype;
+    var p = CairoLevelState.prototype;
 
     p.preload = function () {
         var assets = SecretSpies.path.assets;
-        this.load.image("IqaluitLevelState/background", assets.level.child("iqaluitLevel/iqaluitBackground.png"));
-        this.load.image("IqaluitLevelState/ui/defaultButton", assets.common.child("ui/defaultButton.png"));
-        this.load.spritesheet("IqaluitLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
-        this.load.spritesheet("IqaluitLevelState/character", assets.common.child("textures/character.png"), 27, 40);
-        this.load.spritesheet("IqaluitLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
-        this.load.image("IqaluitLevelState/questionBoxes", assets.common.child("textures/questionBox.png"));
+        this.load.image("CairoLevelState/background", assets.level.child("cairoLevel/cairoBackground.png"));
+        this.load.image("CairoLevelState/ui/defaultButton", assets.common.child("ui/defaultButton.png"));
+        this.load.spritesheet("CairoLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
+        this.load.spritesheet("CairoLevelState/character", assets.common.child("textures/character.png"), 27, 40);
+        this.load.spritesheet("CairoLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
+        this.load.image("CairoLevelState/questionBoxes", assets.common.child("textures/questionBox.png"));
 
-        this.load.tilemap("IqaluitLevelState/map", assets.level.child("iqaluitLevel/iqaluitLevel.json"), null, Phaser.Tilemap.TILED_JSON);
-        this.load.image("IqaluitLevelState/map/tiles", assets.common.child("textures/kennyTiles.png"));
+        this.load.tilemap("CairoLevelState/map", assets.level.child("cairoLevel/cairoLevel.json"), null, Phaser.Tilemap.TILED_JSON);
+        this.load.image("CairoLevelState/map/tiles", assets.common.child("textures/kennyTiles.png"));
 
     }
 
@@ -31,15 +31,15 @@ this.SecretSpies = this.SecretSpies || {};
         this.objects["facing"] = "left";
         this.objects["jumpTimer"] = 0;
 
-        var background = this.objects["background"] = this.add.sprite(0, 0, "IqaluitLevelState/background");
+        var background = this.objects["background"] = this.add.sprite(0, 0, "CairoLevelState/background");
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);
         background.fixedToCamera = true;
 
         this.physics.startSystem(Phaser.Physics.P2JS);
         this.physics.p2.setImpactEvents(true);
 
-        var map = this.objects["map"] = this.add.tilemap("IqaluitLevelState/map");
-        map.addTilesetImage("tiles", "IqaluitLevelState/map/tiles");
+        var map = this.objects["map"] = this.add.tilemap("CairoLevelState/map");
+        map.addTilesetImage("tiles", "CairoLevelState/map/tiles");
 
         var ground = this.objects["ground"] = map.createLayer("tiles");
         ground.resizeWorld();
@@ -55,7 +55,7 @@ this.SecretSpies = this.SecretSpies || {};
         coins.enableBody = true;
         coins.physicsBodyType = Phaser.Physics.P2JS;
 
-        map.createFromObjects("coins", 157, "IqaluitLevelState/coins", 0, true, false, coins);
+        map.createFromObjects("coins", 157, "CairoLevelState/coins", 0, true, false, coins);
         coins.callAll("animations.add", "animations", "spin", [0, 1, 2, 3, 4, 5], 10, true);
         coins.callAll("animations.play", "animations", "spin");
         coins.forEach(function(coin){
@@ -66,13 +66,13 @@ this.SecretSpies = this.SecretSpies || {};
             coin.body.collides(tilesCollisionGroup);
         }, this);
         
-        map.setCollision([23, 38], true, ground);
+        map.setCollision([45, 60], true, ground);
         map.setCollision([157], true, ground);
         map.setCollision([163], true, ground);
 
         var mapTiles = this.physics.p2.convertTilemap(map, ground);
 
-        var character = this.objects["character"] = this.add.sprite(25, 3300, "IqaluitLevelState/character");
+        var character = this.objects["character"] = this.add.sprite(25, 3300, "CairoLevelState/character");
         SecretSpies.scaler(character, "texture").scale(48, 64);
         this.physics.p2.enable(character);
         this.physics.p2.setBoundsToWorld(true, true, true, true, false);
@@ -92,7 +92,7 @@ this.SecretSpies = this.SecretSpies || {};
         questionBoxes.enableBody = true;
         questionBoxes.physicsBodyType = Phaser.Physics.P2JS;
 
-        map.createFromObjects("questionBoxes", 163, "IqaluitLevelState/questionBoxes", 0, true, false, questionBoxes);
+        map.createFromObjects("questionBoxes", 163, "CairoLevelState/questionBoxes", 0, true, false, questionBoxes);
         questionBoxes.forEach(function(questionBox){
             questionBox.body.static = true;
             questionBox.body.setCollisionGroup(questionBoxCollisionGroup);
@@ -163,12 +163,12 @@ this.SecretSpies = this.SecretSpies || {};
             this.state.start("WorldMapState");
         }
 
-        if (character.position.y > 3380) {
-            this.state.start("IqaluitLevelState");
+        if (character.position.y > 3500) {
+            this.state.start("CairoLevelState");
         }
 
         if(character.position.x < 0) {
-            this.state.start("IqaluitLevelState");
+            this.state.start("CairoLevelState");
         }
 
         character.body.velocity.x = 0;
@@ -221,6 +221,6 @@ this.SecretSpies = this.SecretSpies || {};
     }
     p.render = function () {}
 
-    SecretSpies.IqaluitLevelState = IqaluitLevelState;
+    SecretSpies.CairoLevelState = CairoLevelState;
 
 })();

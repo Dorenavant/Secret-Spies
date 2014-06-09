@@ -41,8 +41,8 @@ this.SecretSpies = this.SecretSpies || {};
         london.input.useHandCursor = true;
         london.events.onInputDown.add(londonClicked, this);
         function londonClicked() {
-            this.state.add("MountainLevelState", new SecretSpies.MountainLevelState);
-            this.state.start("MountainLevelState");
+            this.state.add("LondonLevelState", new SecretSpies.LondonLevelState);
+            this.state.start("LondonLevelState");
         }   
     }
 
