@@ -124,7 +124,17 @@ this.SecretSpies = this.SecretSpies || {};
         );
         coinCounterDisplay.fixedToCamera = true;
         
-
+        var backButton = this.add.labelButton(600, 20, "IqaluitLevelState/buttons", 
+            {
+                "font": "20px Arial", 
+                "fill": "white"
+            }, 
+            function() {
+                this.state.start("WorldMapState");
+            }, 
+            this, 0, 1, 2, 1);
+        backButton.fixedToCamera = true;
+        backButton.setText("Back");
     }
 
     function hitCoin(body1, body2) {

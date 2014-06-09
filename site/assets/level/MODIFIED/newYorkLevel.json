@@ -13,7 +13,7 @@
         }, 
         {
          "height":50,
-         "name":"coin",
+         "name":"coins",
          "objects":[
                 {
                  "gid":157,
@@ -3146,7 +3146,7 @@
         }, 
         {
          "height":50,
-         "name":"Mystery box",
+         "name":"questionBoxes",
          "objects":[
                 {
                  "gid":163,
