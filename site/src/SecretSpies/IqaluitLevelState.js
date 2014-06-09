@@ -168,13 +168,21 @@ this.SecretSpies = this.SecretSpies || {};
         character.body.velocity.x = 0;
 
         if (movementInput.left.isDown) {
+<<<<<<< HEAD
             character.body.moveLeft(300);
+=======
+            character.body.moveLeft(400);
+>>>>>>> 5d958e65bd87c3941eda66be7932534eacb8c5d7
             if (facing != 'left') {
                 character.animations.play('left');
                 this.objects["facing"] = 'left';
             }
         } else if (movementInput.right.isDown) {
+<<<<<<< HEAD
             character.body.moveRight(300);
+=======
+            character.body.moveRight(400);
+>>>>>>> 5d958e65bd87c3941eda66be7932534eacb8c5d7
             if (facing != 'right') {
                 character.animations.play('right');
                 this.objects["facing"] = 'right';
@@ -192,8 +200,13 @@ this.SecretSpies = this.SecretSpies || {};
                 this.objects["facing"] = 'idle';
             }
         }
+<<<<<<< HEAD
         if (jumpButton.isDown && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
             character.body.moveUp(500);
+=======
+        if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
+            character.body.moveUp(325);
+>>>>>>> 5d958e65bd87c3941eda66be7932534eacb8c5d7
             jumpTimer = this.time.now + 750;
         }
 
