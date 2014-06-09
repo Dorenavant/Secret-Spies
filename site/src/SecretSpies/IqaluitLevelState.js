@@ -168,13 +168,13 @@ this.SecretSpies = this.SecretSpies || {};
         character.body.velocity.x = 0;
 
         if (movementInput.left.isDown) {
-            character.body.moveLeft(325);
+            character.body.moveLeft(400);
             if (facing != 'left') {
                 character.animations.play('left');
                 this.objects["facing"] = 'left';
             }
         } else if (movementInput.right.isDown) {
-            character.body.moveRight(500);
+            character.body.moveRight(400);
             if (facing != 'right') {
                 character.animations.play('right');
                 this.objects["facing"] = 'right';
@@ -192,8 +192,8 @@ this.SecretSpies = this.SecretSpies || {};
                 this.objects["facing"] = 'idle';
             }
         }
-        if (jumpButton.isDown && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
-            character.body.moveUp(300);
+        if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
+            character.body.moveUp(325);
             jumpTimer = this.time.now + 750;
         }
 
