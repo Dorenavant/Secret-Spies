@@ -18,8 +18,9 @@ this.SecretSpies = this.SecretSpies || {};
         this.load.spritesheet("IqaluitLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
         this.load.spritesheet("IqaluitLevelState/character", assets.common.child("textures/character.png"), 27, 40);
         this.load.spritesheet("IqaluitLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
+        this.load.image("IqaluitLevelState/questionBoxes", assets.common.child("textures/questionBox.png"));
 
-        this.load.tilemap("IqaluitLevelState/map", assets.level.child("iqaluitLevel/level.json"), null, Phaser.Tilemap.TILED_JSON);
+        this.load.tilemap("IqaluitLevelState/map", assets.level.child("iqaluitLevel/iqaluitLevel.json"), null, Phaser.Tilemap.TILED_JSON);
         this.load.image("IqaluitLevelState/map/tiles", assets.common.child("textures/kennyTiles.png"));
 
     }
@@ -45,6 +46,7 @@ this.SecretSpies = this.SecretSpies || {};
         var coinsCollisionGroup = this.physics.p2.createCollisionGroup();
         var characterCollisionGroup = this.physics.p2.createCollisionGroup();
         var tilesCollisionGroup = this.physics.p2.createCollisionGroup();
+        var questionBoxCollisionGroup = this.physics.p2.createCollisionGroup();
 
         this.physics.p2.updateBoundsCollisionGroup();
 
@@ -65,6 +67,7 @@ this.SecretSpies = this.SecretSpies || {};
         
         map.setCollision([23, 38], true, ground);
         map.setCollision([157], true, ground);
+        map.setCollision([163], true, ground);
 
         var mapTiles = this.physics.p2.convertTilemap(map, ground);
 
@@ -84,8 +87,22 @@ this.SecretSpies = this.SecretSpies || {};
 
         this.physics.p2.gravity.y = 400;
 
+        var questionBoxes = this.objects["questionBoxes"] = this.add.group();
+        questionBoxes.enableBody = true;
+        questionBoxes.physicsBodyType = Phaser.Physics.P2JS;
+
+        map.createFromObjects("questionBoxes", 163, "IqaluitLevelState/questionBoxes");
+        questionBoxes.forEach(function(questionBox) {
+            questionBox.body.static = true;
+            questionBox.body.setCircle(20);
+            questionBox.body.setCollisionGroup(questionBoxCollisionGroup);
+            questionBox.body.collides(characterCollisionGroup);
+            questionBox.body.collides(tilesCollisionGroup);
+        }, this);
+
         character.body.collides(tilesCollisionGroup, hitTile, this);
         character.body.collides(coinsCollisionGroup, hitCoin, this);
+        character.body.collides(questionBoxCollisionGroup, hitQuestionBox, this);
         character.animations.add('left', [0, 1, 2, 3], 10, true);
         character.animations.add('turn', [4], 20, true);
         character.animations.add('right', [5, 6, 7, 8], 10, true);  
@@ -98,30 +115,36 @@ this.SecretSpies = this.SecretSpies || {};
 
         var coinCounterDisplay = this.objects["coinCounterDisplay"] = this.add.labelButton(20, 20, "IqaluitLevelState/buttons",
             {
-                "font": "20px Arial", 
+                "font": "50px Arial", 
                 "fill": "white"
             }, 
             function() {
                 this.state.start("WorldMapState");
             },
             this, 0, 1, 2, 1);
+        coinCounterDisplay.fixedToCamera = true;
         SecretSpies.scaler(coinCounterDisplay, "texture").scale(50, 50);
     }
 
     function hitCoin(body1, body2) {
         var coinCounter = this.objects["coinCounter"];
         coinCounter++;
+        console.log(coinCounter);
         body2.sprite.destroy();
     }
+
     function hitTile() {
         var jumpButton = this.objects["jumpButton"]
         var jumpTimer = this.objects["jumpTimer"]
         var character = this.objects["character"];
         if (jumpButton.isDown && this.time.now > jumpTimer) {
-            character.body.moveUp(400);
+            character.body.moveUp(275);
             jumpTimer = this.time.now + 750;
         }
-        character.body.moveUp(275);
+    }
+
+    function hitQuestionBox() {
+        
     }
     p.update = function () {
         var facing = this.objects["facing"];
@@ -170,12 +193,11 @@ this.SecretSpies = this.SecretSpies || {};
             }
         }
         if (jumpButton.isDown && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
-            character.body.moveUp(275);
+            character.body.moveUp(300);
             jumpTimer = this.time.now + 750;
         }
 
         function checkIfCanJump() {
-
             var yAxis = p2.vec2.fromValues(0, 1);
             var result = false;
 
