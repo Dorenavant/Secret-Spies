@@ -208,7 +208,7 @@ this.SecretSpies = this.SecretSpies || {};
                 this.objects["facing"] = 'idle';
             }
         }
-        if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
+        if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer) {//} && checkIfCanJump.call(this)) {
             character.body.moveUp(400);
             jumpTimer = this.time.now + 750;
         }
