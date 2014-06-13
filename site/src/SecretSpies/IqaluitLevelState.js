@@ -80,7 +80,7 @@ this.SecretSpies = this.SecretSpies || {};
         character.body.setCollisionGroup(characterCollisionGroup);
 
         for (var i = 0; i < mapTiles.length; i++) {
-            var tileBody = mapTiles[i];
+            var tileBody = mapTiles[i] = this.objects["tileBody"];
             tileBody.setCollisionGroup(tilesCollisionGroup);
             tileBody.collides(characterCollisionGroup);
             tileBody.collides(coinsCollisionGroup);
@@ -100,7 +100,7 @@ this.SecretSpies = this.SecretSpies || {};
             questionBox.body.collides(tilesCollisionGroup);
         }, this);
 
-        character.body.collides(tilesCollisionGroup);//, hitTile, this);
+        character.body.collides(tilesCollisionGroup, hitTile, this);
         character.body.collides(coinsCollisionGroup, hitCoin, this);
         character.body.collides(questionBoxCollisionGroup, hitQuestionBox, this);
         character.animations.add('left', [0, 1, 2, 3], 10, true);
@@ -151,7 +151,7 @@ this.SecretSpies = this.SecretSpies || {};
             character.body.moveUp(275);
             jumpTimer = this.time.now + 750;
         }*/
-        return true;
+        var tileHit = this.objects["tileHit"] = true;
     }
 
     function hitQuestionBox(body1, body2) {
@@ -166,15 +166,24 @@ this.SecretSpies = this.SecretSpies || {};
         var jumpButton = this.objects["jumpButton"];
         var coinCounter = this.objects["coinCounter"];
         var coinCounterDisplay = this.objects["coinCounterDisplay"];
+        var tileHit = this.objects["tileHit"];
+        var tileBody = this.objects["tileBody"];
 
         coinCounterDisplay.setText(coinCounter);
 
-        if (character.position.x > 20980) {
+        if (!character.inWorld) {
             this.state.start("WorldMapState");
         }
 
-        if (character.position.y > 3380) {
+        /*if (character.position.y > 3380) {
             this.state.start("IqaluitLevelState");
+        }*/
+
+        if (character.overlap(tileBody)) {
+            if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer) {
+            character.body.moveUp(400);
+            jumpTimer = this.time.now + 750;
+            }
         }
 
         if(character.position.x < 0) {
@@ -208,6 +217,7 @@ this.SecretSpies = this.SecretSpies || {};
                 this.objects["facing"] = 'idle';
             }
         }
+        
         if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
             character.body.moveUp(400);
             jumpTimer = this.time.now + 750;
