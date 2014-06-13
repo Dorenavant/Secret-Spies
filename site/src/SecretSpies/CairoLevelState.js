@@ -169,11 +169,7 @@ this.SecretSpies = this.SecretSpies || {};
 
         coinCounterDisplay.setText(coinCounter);
 
-        if (character.position.x > 20980) {
-            this.state.start("WorldMapState");
-        }
-
-        if (character.position.y > 3500) {
+        if (!character.inWorld) {
             this.state.start("CairoLevelState");
         }
 
@@ -208,6 +204,11 @@ this.SecretSpies = this.SecretSpies || {};
                 this.objects["facing"] = 'idle';
             }
         }
+        
+        if (movementInput.down.isDown) {
+            character.body.moveDown(400);
+        }
+
         if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
             character.body.moveUp(400);
             jumpTimer = this.time.now + 750;

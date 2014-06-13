@@ -168,7 +168,7 @@ this.SecretSpies = this.SecretSpies || {};
 
         coinCounterDisplay.setText(coinCounter);
 
-        if (character.position.y > 3380) {
+        if (!character.inWorld) {
             this.state.start("BeijingLevelState");
         }
 
@@ -203,6 +203,11 @@ this.SecretSpies = this.SecretSpies || {};
                 this.objects["facing"] = 'idle';
             }
         }
+
+        if (movementInput.down.isDown) {
+            character.body.moveDown(400);
+        }
+        
         if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
             character.body.moveUp(400);
             jumpTimer = this.time.now + 750;

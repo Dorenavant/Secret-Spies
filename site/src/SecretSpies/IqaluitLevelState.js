@@ -19,7 +19,7 @@ this.SecretSpies = this.SecretSpies || {};
         this.load.spritesheet("IqaluitLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
         this.load.spritesheet("IqaluitLevelState/character", assets.common.child("textures/character.png"), 27, 40);
         this.load.spritesheet("IqaluitLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
-        this.load.spritesheet("IqaluitLevelState/AI", assets.common.child("textures/monster.png"));
+        this.load.spritesheet("IqaluitLevelState/AI", assets.common.child("textures/monster.png"), 39, 40);
         this.load.image("IqaluitLevelState/questionBoxes", assets.common.child("textures/questionBox.png"));
 
         this.load.tilemap("IqaluitLevelState/map", assets.level.child("iqaluitLevel/iqaluitLevel.json"), null, Phaser.Tilemap.TILED_JSON);
@@ -49,6 +49,7 @@ this.SecretSpies = this.SecretSpies || {};
         var characterCollisionGroup = this.physics.p2.createCollisionGroup();
         var tilesCollisionGroup = this.physics.p2.createCollisionGroup();
         var questionBoxCollisionGroup = this.physics.p2.createCollisionGroup();
+        var AICollisionGroup = this.physics.p2.createCollisionGroup();
 
         this.physics.p2.updateBoundsCollisionGroup();
 
@@ -84,10 +85,15 @@ this.SecretSpies = this.SecretSpies || {};
             var tileBody = mapTiles[i];
             tileBody.setCollisionGroup(tilesCollisionGroup);
             tileBody.collides(characterCollisionGroup);
-            tileBody.collides(coinsCollisionGroup);
+            tileBody.collides(AICollisionGroup);
         }
 
-        var AI 
+        var AI = this.add.sprite(75, 3300, "IqaluitLevelState/AI");
+        SecretSpies.scaler(AI, "texture").scale(78, 80);
+        this.physics.p2.enable(AI);
+        this.physics.p2.setBoundsToWorld(true, true, true, true, false);
+        AI.body.fixedRotation = true;
+        AI.body.setCollisionGroup(AICollisionGroup);
 
         this.physics.p2.gravity.y = 500;
 
@@ -103,12 +109,17 @@ this.SecretSpies = this.SecretSpies || {};
             questionBox.body.collides(tilesCollisionGroup);
         }, this);
 
-        character.body.collides(tilesCollisionGroup);s
+        character.body.collides(tilesCollisionGroup);
         character.body.collides(coinsCollisionGroup, hitCoin, this);
         character.body.collides(questionBoxCollisionGroup, hitQuestionBox, this);
         character.animations.add('left', [0, 1, 2, 3], 10, true);
         character.animations.add('turn', [4], 20, true);
-        character.animations.add('right', [5, 6, 7, 8], 10, true);  
+        character.animations.add('right', [5, 6, 7, 8], 10, true);
+
+        AI.body.collides(characterCollisionGroup);
+        AI.body.collides(tilesCollisionGroup);
+        AI.animations.add("walk");
+        AI.animations.play("walk", 50, true);
 
         this.camera.follow(character);
 
@@ -146,17 +157,6 @@ this.SecretSpies = this.SecretSpies || {};
         body2.sprite.kill();
     }
 
-    function hitTile() {
-        /*var jumpButton = this.objects["jumpButton"]
-        var jumpTimer = this.objects["jumpTimer"]
-        var character = this.objects["character"];
-        if (jumpButton.isDown && this.time.now > jumpTimer) {
-            character.body.moveUp(275);
-            jumpTimer = this.time.now + 750;
-        }*/
-        var tileHit = this.objects["tileHit"] = true;
-    }
-
     function hitQuestionBox(body1, body2) {
 
         body2.sprite.kill();
@@ -169,19 +169,14 @@ this.SecretSpies = this.SecretSpies || {};
         var jumpButton = this.objects["jumpButton"];
         var coinCounter = this.objects["coinCounter"];
         var coinCounterDisplay = this.objects["coinCounterDisplay"];
-        var tileHit = this.objects["tileHit"];
 
         coinCounterDisplay.setText(coinCounter);
 
         if (!character.inWorld) {
-            this.state.start("WorldMapState");
+            this.state.start("IqaluitLevelState");
         }
 
-        /*if (character.position.y > 3380) {
-            this.state.start("IqaluitLevelState");
-        }*/
-
-        if(character.position.x < 0) {
+        if (character.position.y > 3400) {
             this.state.start("IqaluitLevelState");
         }
 
@@ -194,7 +189,7 @@ this.SecretSpies = this.SecretSpies || {};
                 this.objects["facing"] = 'left';
             }
         } else if (movementInput.right.isDown) {
-            character.body.moveRight(400);
+            character.body.moveRight(4a00);
             if (facing != 'right') {
                 character.animations.play('right');
                 this.objects["facing"] = 'right';
@@ -212,7 +207,11 @@ this.SecretSpies = this.SecretSpies || {};
                 this.objects["facing"] = 'idle';
             }
         }
-        
+
+        if (movementInput.down.isDown) {
+            character.body.moveDown(400);
+        }
+         
         if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
             character.body.moveUp(400);
             jumpTimer = this.time.now + 750;
