@@ -19,6 +19,7 @@ this.SecretSpies = this.SecretSpies || {};
         this.load.spritesheet("IqaluitLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
         this.load.spritesheet("IqaluitLevelState/character", assets.common.child("textures/character.png"), 27, 40);
         this.load.spritesheet("IqaluitLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
+        this.load.spritesheet("IqaluitLevelState/AI", assets.common.child("textures/monster.png"));
         this.load.image("IqaluitLevelState/questionBoxes", assets.common.child("textures/questionBox.png"));
 
         this.load.tilemap("IqaluitLevelState/map", assets.level.child("iqaluitLevel/iqaluitLevel.json"), null, Phaser.Tilemap.TILED_JSON);
@@ -80,11 +81,13 @@ this.SecretSpies = this.SecretSpies || {};
         character.body.setCollisionGroup(characterCollisionGroup);
 
         for (var i = 0; i < mapTiles.length; i++) {
-            var tileBody = mapTiles[i] = this.objects["tileBody"];
+            var tileBody = mapTiles[i];
             tileBody.setCollisionGroup(tilesCollisionGroup);
             tileBody.collides(characterCollisionGroup);
             tileBody.collides(coinsCollisionGroup);
         }
+
+        var AI 
 
         this.physics.p2.gravity.y = 500;
 
@@ -100,7 +103,7 @@ this.SecretSpies = this.SecretSpies || {};
             questionBox.body.collides(tilesCollisionGroup);
         }, this);
 
-        character.body.collides(tilesCollisionGroup, hitTile, this);
+        character.body.collides(tilesCollisionGroup);s
         character.body.collides(coinsCollisionGroup, hitCoin, this);
         character.body.collides(questionBoxCollisionGroup, hitQuestionBox, this);
         character.animations.add('left', [0, 1, 2, 3], 10, true);
@@ -167,7 +170,6 @@ this.SecretSpies = this.SecretSpies || {};
         var coinCounter = this.objects["coinCounter"];
         var coinCounterDisplay = this.objects["coinCounterDisplay"];
         var tileHit = this.objects["tileHit"];
-        var tileBody = this.objects["tileBody"];
 
         coinCounterDisplay.setText(coinCounter);
 
@@ -178,13 +180,6 @@ this.SecretSpies = this.SecretSpies || {};
         /*if (character.position.y > 3380) {
             this.state.start("IqaluitLevelState");
         }*/
-
-        if (character.overlap(tileBody)) {
-            if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer) {
-            character.body.moveUp(400);
-            jumpTimer = this.time.now + 750;
-            }
-        }
 
         if(character.position.x < 0) {
             this.state.start("IqaluitLevelState");
