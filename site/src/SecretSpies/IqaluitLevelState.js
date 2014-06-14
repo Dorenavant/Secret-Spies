@@ -163,7 +163,8 @@ this.SecretSpies = this.SecretSpies || {};
     }
 
     function hitMob() {
-        this.state.start("IqaluitLevelState");
+        
+        this.state.start("DeathState");
     }
 
     p.update = function () {

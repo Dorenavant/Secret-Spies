@@ -172,8 +172,14 @@ this.SecretSpies = this.SecretSpies || {};
             this.state.start("BeijingLevelState");
         }
 
-        if(character.position.x < 0) {
-            this.state.start("BeijingLevelState");
+        if (character.position.y > 3400) {
+            this.state.add("DeathState", new SecretSpies.DeathState());
+            this.state.start("DeathState");
+        }
+
+        if (character.position.x > 20578) {
+            this.state.add("FinishedLevelState", new SecretSpies.FinishedLevelState());
+            this.state.start("FinishedLevelState");
         }
 
         character.body.velocity.x = 0;
