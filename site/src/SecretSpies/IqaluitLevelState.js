@@ -19,7 +19,7 @@ this.SecretSpies = this.SecretSpies || {};
         this.load.spritesheet("IqaluitLevelState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
         this.load.spritesheet("IqaluitLevelState/character", assets.common.child("textures/character.png"), 27, 40);
         this.load.spritesheet("IqaluitLevelState/coins", assets.common.child("textures/coins.png"), 32, 32);
-        this.load.spritesheet("IqaluitLevelState/AI", assets.common.child("textures/monster.png"), 39, 40);
+        this.load.spritesheet("IqaluitLevelState/mob", assets.common.child("textures/originalMonster.png"), 39, 40);
         this.load.image("IqaluitLevelState/questionBoxes", assets.common.child("textures/questionBox.png"));
 
         this.load.tilemap("IqaluitLevelState/map", assets.level.child("iqaluitLevel/iqaluitLevel.json"), null, Phaser.Tilemap.TILED_JSON);
@@ -49,7 +49,7 @@ this.SecretSpies = this.SecretSpies || {};
         var characterCollisionGroup = this.physics.p2.createCollisionGroup();
         var tilesCollisionGroup = this.physics.p2.createCollisionGroup();
         var questionBoxCollisionGroup = this.physics.p2.createCollisionGroup();
-        var AICollisionGroup = this.physics.p2.createCollisionGroup();
+        var mobCollisionGroup = this.physics.p2.createCollisionGroup();
 
         this.physics.p2.updateBoundsCollisionGroup();
 
@@ -85,15 +85,15 @@ this.SecretSpies = this.SecretSpies || {};
             var tileBody = mapTiles[i];
             tileBody.setCollisionGroup(tilesCollisionGroup);
             tileBody.collides(characterCollisionGroup);
-            tileBody.collides(AICollisionGroup);
+            tileBody.collides(mobCollisionGroup);
         }
 
-        var AI = this.add.sprite(75, 3300, "IqaluitLevelState/AI");
-        SecretSpies.scaler(AI, "texture").scale(78, 80);
-        this.physics.p2.enable(AI);
+        var mob  = this.objects["mob"] = this.add.sprite(150, 2000, "IqaluitLevelState/mob");
+        SecretSpies.scaler(mob, "texture").scale(117, 120);
+        this.physics.p2.enable(mob);
         this.physics.p2.setBoundsToWorld(true, true, true, true, false);
-        AI.body.fixedRotation = true;
-        AI.body.setCollisionGroup(AICollisionGroup);
+        mob.body.fixedRotation = true;
+        mob.body.setCollisionGroup(mobCollisionGroup);
 
         this.physics.p2.gravity.y = 500;
 
@@ -112,14 +112,15 @@ this.SecretSpies = this.SecretSpies || {};
         character.body.collides(tilesCollisionGroup);
         character.body.collides(coinsCollisionGroup, hitCoin, this);
         character.body.collides(questionBoxCollisionGroup, hitQuestionBox, this);
+        character.body.collides(mobCollisionGroup, hitMob, this);
         character.animations.add('left', [0, 1, 2, 3], 10, true);
         character.animations.add('turn', [4], 20, true);
         character.animations.add('right', [5, 6, 7, 8], 10, true);
 
-        AI.body.collides(characterCollisionGroup);
-        AI.body.collides(tilesCollisionGroup);
-        AI.animations.add("walk");
-        AI.animations.play("walk", 50, true);
+        mob.body.collides(characterCollisionGroup, hitMob, this);
+        mob.body.collides(tilesCollisionGroup);
+        mob.animations.add("walk");
+        mob.animations.play("walk", 10, true);
 
         this.camera.follow(character);
 
@@ -158,8 +159,11 @@ this.SecretSpies = this.SecretSpies || {};
     }
 
     function hitQuestionBox(body1, body2) {
-
         body2.sprite.kill();
+    }
+
+    function hitMob() {
+        this.state.start("IqaluitLevelState");
     }
     p.update = function () {
         var facing = this.objects["facing"];
@@ -169,10 +173,14 @@ this.SecretSpies = this.SecretSpies || {};
         var jumpButton = this.objects["jumpButton"];
         var coinCounter = this.objects["coinCounter"];
         var coinCounterDisplay = this.objects["coinCounterDisplay"];
+        var mob = this.objects["mob"];
+
+        mob.body.moveRight(50);
 
         coinCounterDisplay.setText(coinCounter);
 
         if (!character.inWorld) {
+            console.log("wankede");
             this.state.start("IqaluitLevelState");
         }
 
@@ -189,7 +197,7 @@ this.SecretSpies = this.SecretSpies || {};
                 this.objects["facing"] = 'left';
             }
         } else if (movementInput.right.isDown) {
-            character.body.moveRight(4a00);
+            character.body.moveRight(400);
             if (facing != 'right') {
                 character.animations.play('right');
                 this.objects["facing"] = 'right';
