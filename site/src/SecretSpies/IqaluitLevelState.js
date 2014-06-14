@@ -36,8 +36,8 @@ this.SecretSpies = this.SecretSpies || {};
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);
         background.fixedToCamera = true;
 
-        this.physics.startSystem(Phaser.Physics.P2JS);
-        this.physics.p2.setImpactEvents(true);
+        this.physics.startSystem(Phaser.Physics.ARCADE);
+        //this.physics.setImpactEvents(true);
 
         var map = this.objects["map"] = this.add.tilemap("IqaluitLevelState/map");
         map.addTilesetImage("tiles", "IqaluitLevelState/map/tiles");
@@ -45,15 +45,15 @@ this.SecretSpies = this.SecretSpies || {};
         var ground = this.objects["ground"] = map.createLayer("tiles");
         ground.resizeWorld();
 
-        var coinsCollisionGroup = this.physics.p2.createCollisionGroup();
+        /*var coinsCollisionGroup = this.physics.p2.createCollisionGroup();
         var characterCollisionGroup = this.physics.p2.createCollisionGroup();
         var tilesCollisionGroup = this.physics.p2.createCollisionGroup();
         var questionBoxCollisionGroup = this.physics.p2.createCollisionGroup();
-        var mobCollisionGroup = this.physics.p2.createCollisionGroup();
+        var mobCollisionGroup = this.physics.p2.createCollisionGroup();*/
 
-        this.physics.p2.updateBoundsCollisionGroup();
+        //this.physics.p2.updateBoundsCollisionGroup();
 
-        var coins = this.objects["coins"] = this.add.group();
+        /*var coins = this.objects["coins"] = this.add.group();
         coins.enableBody = true;
         coins.physicsBodyType = Phaser.Physics.P2JS;
 
@@ -66,22 +66,22 @@ this.SecretSpies = this.SecretSpies || {};
             coin.body.setCollisionGroup(coinsCollisionGroup);
             coin.body.collides(characterCollisionGroup);
             coin.body.collides(tilesCollisionGroup);
-        }, this);
+        }, this);*/
         
         map.setCollision([23, 38], true, ground);
         map.setCollision([157], true, ground);
         map.setCollision([163], true, ground);
 
-        var mapTiles = this.physics.p2.convertTilemap(map, ground);
+        //var mapTiles = this.physics.convertTilemap(map, ground);
 
-        var character = this.objects["character"] = this.add.sprite(25, 3300, "IqaluitLevelState/character");
+        var character = this.objects["character"] = this.add.sprite(25, 3000, "IqaluitLevelState/character");
         SecretSpies.scaler(character, "texture").scale(48, 64);
-        this.physics.p2.enable(character);
-        this.physics.p2.setBoundsToWorld(true, true, true, true, false);
-        character.body.fixedRotation = true;
-        character.body.setCollisionGroup(characterCollisionGroup);
+        this.physics.enable(character);
+        this.physics.setBoundsToWorld(true, true, true, true, false);
 
-        for (var i = 0; i < mapTiles.length; i++) {
+        //character.body.setCollisionGroup(characterCollisionGroup);
+
+        /*for (var i = 0; i < mapTiles.length; i++) {
             var tileBody = mapTiles[i];
             tileBody.setCollisionGroup(tilesCollisionGroup);
             tileBody.collides(characterCollisionGroup);
@@ -93,11 +93,12 @@ this.SecretSpies = this.SecretSpies || {};
         this.physics.p2.enable(mob);
         this.physics.p2.setBoundsToWorld(true, true, true, true, false);
         mob.body.fixedRotation = true;
-        mob.body.setCollisionGroup(mobCollisionGroup);
+        mob.body.setCollisionGroup(mobCollisionGroup);*/
 
-        this.physics.p2.gravity.y = 500;
+        this.physics.arcade.gravity.y = 300;
+        this.physics.enable(character);
 
-        var questionBoxes = this.objects["questionBoxes"] = this.add.group();
+        /*var questionBoxes = this.objects["questionBoxes"] = this.add.group();
         questionBoxes.enableBody = true;
         questionBoxes.physicsBodyType = Phaser.Physics.P2JS;
 
@@ -112,21 +113,22 @@ this.SecretSpies = this.SecretSpies || {};
         character.body.collides(tilesCollisionGroup);
         character.body.collides(coinsCollisionGroup, hitCoin, this);
         character.body.collides(questionBoxCollisionGroup, hitQuestionBox, this);
-        character.body.collides(mobCollisionGroup, hitMob, this);
+        character.body.collides(mobCollisionGroup, hitMob, this);*/
         character.animations.add('left', [0, 1, 2, 3], 10, true);
         character.animations.add('turn', [4], 20, true);
         character.animations.add('right', [5, 6, 7, 8], 10, true);
+        character.collideWorldBounds = true;
 
-        mob.body.collides(characterCollisionGroup, hitMob, this);
+        /*mob.body.collides(characterCollisionGroup, hitMob, this);
         mob.body.collides(tilesCollisionGroup);
         mob.animations.add("walk");
-        mob.animations.play("walk", 10, true);
+        mob.animations.play("walk", 10, true);*/
 
         this.camera.follow(character);
 
         var movementInput = this.objects["movementInput"] = this.input.keyboard.createCursorKeys();
         var jumpButton = this.objects["jumpButton"] = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        var coinCounter = this.objects["coinCounter"] = 0;
+        /*var coinCounter = this.objects["coinCounter"] = 0;
         
         var coinCounterDisplay = this.objects["coinCounterDisplay"] = this.add.text(20, 20, this.objects["coinCounter"],
             {
@@ -137,7 +139,7 @@ this.SecretSpies = this.SecretSpies || {};
                 "strokeThickness": 3
             }
         );
-        coinCounterDisplay.fixedToCamera = true;
+        coinCounterDisplay.fixedToCamera = true;*/
         
         var backButton = this.add.labelButton(600, 20, "IqaluitLevelState/buttons", 
             {
@@ -152,7 +154,7 @@ this.SecretSpies = this.SecretSpies || {};
         backButton.setText("Back");
     }
 
-    function hitCoin(body1, body2) {
+    /*function hitCoin(body1, body2) {
         var coinCounter = ++this.objects["coinCounter"];
         this.objects["coinCounterDisplay"].setText(coinCounter.toString());
         body2.sprite.kill();
@@ -164,23 +166,26 @@ this.SecretSpies = this.SecretSpies || {};
 
     function hitMob() {
         this.state.start("IqaluitLevelState");
-    }
+    }*/
+
     p.update = function () {
         var facing = this.objects["facing"];
         var jumpTimer = this.objects["jumpTimer"];
         var character = this.objects["character"];
         var movementInput = this.objects["movementInput"];
         var jumpButton = this.objects["jumpButton"];
-        var coinCounter = this.objects["coinCounter"];
-        var coinCounterDisplay = this.objects["coinCounterDisplay"];
-        var mob = this.objects["mob"];
+        var ground = this.objects["ground"];
+        //var coinCounter = this.objects["coinCounter"];
+        //var coinCounterDisplay = this.objects["coinCounterDisplay"];
+        //var mob = this.objects["mob"];
 
-        mob.body.moveRight(50);
+        //mob.body.moveRight(50);
 
-        coinCounterDisplay.setText(coinCounter);
+        //coinCounterDisplay.setText(coinCounter);
+
+        this.physics.arcade.collide(character, ground);
 
         if (!character.inWorld) {
-            console.log("wankede");
             this.state.start("IqaluitLevelState");
         }
 
@@ -191,13 +196,13 @@ this.SecretSpies = this.SecretSpies || {};
         character.body.velocity.x = 0;
 
         if (movementInput.left.isDown) {
-            character.body.moveLeft(400);
+            character.body.velocity.x = -200;
             if (facing != 'left') {
                 character.animations.play('left');
                 this.objects["facing"] = 'left';
             }
         } else if (movementInput.right.isDown) {
-            character.body.moveRight(400);
+            character.body.velocity.x = 200;
             if (facing != 'right') {
                 character.animations.play('right');
                 this.objects["facing"] = 'right';
@@ -217,27 +222,12 @@ this.SecretSpies = this.SecretSpies || {};
         }
 
         if (movementInput.down.isDown) {
-            character.body.moveDown(400);
+            character.body.velocity.y = 200;
         }
          
-        if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
-            character.body.moveUp(400);
+        if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer && character.body.onFloor()) {
+            character.body.velocity.y = -300;
             jumpTimer = this.time.now + 750;
-        }
-
-        function checkIfCanJump() {
-            var yAxis = p2.vec2.fromValues(0, 1);
-            var result = false;
-
-            for (var i = 0; i < this.physics.p2.world.narrowphase.contactEquations.length; i++) {
-                var c = this.physics.p2.world.narrowphase.contactEquations[i];
-                if (c.bodyA === character.body.data || c.bodyB === character.body.data) {
-                    var d = p2.vec2.dot(c.normalA, yAxis); // Normal dot Y-axis
-                    if (c.bodyA === character.body.data) d *= -1;
-                    if (d > 0.5) result = true;
-                }
-            }
-            return result;
         }
 
     }
