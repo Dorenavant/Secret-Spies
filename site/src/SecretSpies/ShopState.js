@@ -14,7 +14,7 @@ this.SecretSpies = this.SecretSpies || {};
 
     p.preload = function() {
         var assets = SecretSpies.path.assets;
-        this.load.image("ShopState/background", assets.level.child("Shop/shop.png"));
+        this.load.image("ShopState/background", assets.level.child("shop/shop.png"));
         this.load.spritesheet("ShopState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
     }
 

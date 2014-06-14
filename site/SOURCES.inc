@@ -7,7 +7,8 @@ INPUT_FILES := \
 	\
 	$(SRC)/SecretSpies.js \
 	$(SRC)/GameState.js \
-	$(SRC)/ShopState.js \
+	$(SRC)/FinishedLevelState.js \
+	$(SRC)/DeathState.js \
 	$(SRC)/NewYorkLevelState.js \
 	$(SRC)/IqaluitLevelState.js \
 	$(SRC)/NorthAmericaState.js \
