@@ -3384,7 +3384,7 @@
         }, 
         {
          "height":50,
-         "name":"Mystery box",
+         "name":"questionBoxes",
          "objects":[
                 {
                  "gid":163,

@@ -3609,10 +3609,8 @@
         }, 
         {
          "height":50,
-<<<<<<< HEAD
          "name":"questionBoxes",
          "objects":[],
-=======
          "name":"Mystery box",
          "objects":[
                 {
@@ -3699,7 +3697,6 @@
                  "x":18856,
                  "y":3041
                 }],
->>>>>>> FETCH_HEAD
          "opacity":1,
          "type":"objectgroup",
          "visible":true,

@@ -3,35 +3,35 @@ this.SecretSpies = this.SecretSpies || {};
 (function(undefined) {
     "use strict";
 
-    var IqaluitDeathState = function() {
+    var NewYorkDeathState = function() {
         this.objects = {};
         this._cachedValues = {};
     }
 
-    SecretSpies.extend(IqaluitDeathState, SecretSpies.GameState);
+    SecretSpies.extend(NewYorkDeathState, SecretSpies.GameState);
 
-    var p = IqaluitDeathState.prototype;
+    var p = NewYorkDeathState.prototype;
 
     p.preload = function() {
         var assets = SecretSpies.path.assets;
-        this.load.image("IqaluitDeathState/background", assets.level.child("deathScreen/deathScreen.png"));
-        this.load.spritesheet("IqaluitDeathState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
+        this.load.image("NewYorkDeathState/background", assets.level.child("deathScreen/deathScreen.png"));
+        this.load.spritesheet("NewYorkDeathState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
     }
 
     p.create = function() {
-        var background = this.objects["background"] = this.add.sprite(0, 0, "IqaluitDeathState/background");
+        var background = this.objects["background"] = this.add.sprite(0, 0, "NewYorkDeathState/background");
         SecretSpies.scaler(background, "texture").scale(this.stage.bounds);  
-        var continueButton = this.add.labelButton(100, 500, "IqaluitDeathState/buttons", 
+        var continueButton = this.add.labelButton(100, 500, "NewYorkDeathState/buttons", 
             {
                 "font": "18px Arial", 
                 "fill": "white"
             }, 
             function() {
-                this.state.start("IqaluitLevelState");
+                this.state.start("NewYorkLevelState");
             }, 
             this, 0, 1, 2, 1);
         continueButton.setText("Try Again");
-        var backButton = this.add.labelButton(575, 500, "IqaluitDeathState/buttons", 
+        var backButton = this.add.labelButton(575, 500, "NewYorkDeathState/buttons", 
             {
                 "font": "18px Arial", 
                 "fill": "white"
@@ -50,6 +50,6 @@ this.SecretSpies = this.SecretSpies || {};
     p.render = function() {
     }
 
-    SecretSpies.IqaluitDeathState = IqaluitDeathState;
+    SecretSpies.NewYorkDeathState = NewYorkDeathState;
 
 })();

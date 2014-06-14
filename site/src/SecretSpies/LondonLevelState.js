@@ -141,21 +141,9 @@ this.SecretSpies = this.SecretSpies || {};
         var coinCounter = ++this.objects["coinCounter"];
         this.objects["coinCounterDisplay"].setText(coinCounter.toString());
         body2.sprite.kill();
-    }
-
-    function hitTile() {
-        /*var jumpButton = this.objects["jumpButton"]
-        var jumpTimer = this.objects["jumpTimer"]
-        var character = this.objects["character"];
-        if (jumpButton.isDown && this.time.now > jumpTimer) {
-            character.body.moveUp(275);
-            jumpTimer = this.time.now + 750;
-        }*/
-        return true;
-    }
+    }   
 
     function hitQuestionBox(body1, body2) {
-
         body2.sprite.kill();
     }
     p.update = function () {
@@ -173,8 +161,14 @@ this.SecretSpies = this.SecretSpies || {};
             this.state.start("LondonLevelState");
         }
 
-        if(character.position.x < 0) {
-            this.state.start("LondonLevelState");
+        if (character.position.y > 3400) {
+            this.state.add("LondonDeathState", new SecretSpies.LondonDeathState());
+            this.state.start("LondonDeathState");
+        }
+
+        if (character.position.x > 20590) {
+            this.state.add("FinishedLevelState", new SecretSpies.FinishedLevelState());
+            this.state.start("FinishedLevelState");
         }
 
         character.body.velocity.x = 0;

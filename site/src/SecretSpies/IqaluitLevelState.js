@@ -163,8 +163,8 @@ this.SecretSpies = this.SecretSpies || {};
     }
 
     function hitMob() {
-        
-        this.state.start("DeathState");
+        this.state.add("IqaluitDeathState", new SecretSpies.IqaluitDeathState());
+        this.state.start("IqaluitDeathState");
     }
 
     p.update = function () {
@@ -177,20 +177,17 @@ this.SecretSpies = this.SecretSpies || {};
         var coinCounterDisplay = this.objects["coinCounterDisplay"];
         var mob = this.objects["mob"];
 
-        console.log(character.position.x);
-
         mob.body.moveRight(50);
 
         coinCounterDisplay.setText(coinCounter);
 
         if (!character.inWorld) {
-            this.state.add("DeathState", new SecretSpies.DeathState);
-            this.state.start("DeathState");
+            this.state.start("IqaluitLevelState");
         }
 
         if (character.position.y > 3400) {
-            this.state.add("DeathState", new SecretSpies.DeathState());
-            this.state.start("DeathState");
+            this.state.add("IqaluitDeathState", new SecretSpies.IqaluitDeathState());
+            this.state.start("IqaluitDeathState");
         }
 
         if (character.position.x > 20578) {

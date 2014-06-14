@@ -154,9 +154,9 @@ this.SecretSpies = this.SecretSpies || {};
     }*/
 
     function hitQuestionBox(body1, body2) {
-
         body2.sprite.kill();
     }
+    
     p.update = function () {
         var facing = this.objects["facing"];
         var jumpTimer = this.objects["jumpTimer"];
@@ -173,8 +173,8 @@ this.SecretSpies = this.SecretSpies || {};
         }
 
         if (character.position.y > 3400) {
-            this.state.add("DeathState", new SecretSpies.DeathState());
-            this.state.start("DeathState");
+            this.state.add("BeijingDeathState", new SecretSpies.BeijingDeathState());
+            this.state.start("BeijingDeathState");
         }
 
         if (character.position.x > 20578) {

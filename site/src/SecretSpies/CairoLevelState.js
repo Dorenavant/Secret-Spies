@@ -143,17 +143,6 @@ this.SecretSpies = this.SecretSpies || {};
         body2.sprite.kill();
     }
 
-    function hitTile() {
-        /*var jumpButton = this.objects["jumpButton"]
-        var jumpTimer = this.objects["jumpTimer"]
-        var character = this.objects["character"];
-        if (jumpButton.isDown && this.time.now > jumpTimer) {
-            character.body.moveUp(275);
-            jumpTimer = this.time.now + 750;
-        }*/
-        return true;
-    }
-
     function hitQuestionBox(body1, body2) {
 
         body2.sprite.kill();
@@ -172,9 +161,15 @@ this.SecretSpies = this.SecretSpies || {};
         if (!character.inWorld) {
             this.state.start("CairoLevelState");
         }
+      
+        if (character.position.y > 3200) {
+            this.state.add("CairoDeathState", new SecretSpies.CairoDeathState());
+            this.state.start("CairoDeathState");
+        }
 
-        if(character.position.x < 0) {
-            this.state.start("CairoLevelState");
+        if (character.position.x > 20590) {
+            this.state.add("FinishedLevelState", new SecretSpies.FinishedLevelState());
+            this.state.start("FinishedLevelState");
         }
 
         character.body.velocity.x = 0;
@@ -209,7 +204,7 @@ this.SecretSpies = this.SecretSpies || {};
             character.body.moveDown(400);
         }
 
-        if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer && checkIfCanJump.call(this)) {
+        if ((jumpButton.isDown || movementInput.up.isDown) && this.time.now > jumpTimer) {// && checkIfCanJump.call(this)) {
             character.body.moveUp(400);
             jumpTimer = this.time.now + 750;
         }

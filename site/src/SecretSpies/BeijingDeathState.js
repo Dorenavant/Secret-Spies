@@ -14,7 +14,7 @@ this.SecretSpies = this.SecretSpies || {};
 
     p.preload = function() {
         var assets = SecretSpies.path.assets;
-        this.load.image("BeijingDeathState/background", assets.level.child("BeijingDeathScreen/BeijingDeathScreen.png"));
+        this.load.image("BeijingDeathState/background", assets.level.child("deathScreen/deathScreen.png"));
         this.load.spritesheet("BeijingDeathState/buttons", assets.common.child("textures/buttons.png"), 186, 64);
     }
 

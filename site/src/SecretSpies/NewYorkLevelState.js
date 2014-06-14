@@ -100,7 +100,7 @@ this.SecretSpies = this.SecretSpies || {};
             questionBox.body.collides(tilesCollisionGroup);
         }, this);
 
-        character.body.collides(tilesCollisionGroup);//, hitTile, this);
+        character.body.collides(tilesCollisionGroup);
         character.body.collides(coinsCollisionGroup, hitCoin, this);
         character.body.collides(questionBoxCollisionGroup, hitQuestionBox, this);
         character.animations.add('left', [0, 1, 2, 3], 10, true);
@@ -143,17 +143,6 @@ this.SecretSpies = this.SecretSpies || {};
         body2.sprite.kill();
     }
 
-    function hitTile() {
-        /*var jumpButton = this.objects["jumpButton"]
-        var jumpTimer = this.objects["jumpTimer"]
-        var character = this.objects["character"];
-        if (jumpButton.isDown && this.time.now > jumpTimer) {
-            character.body.moveUp(275);
-            jumpTimer = this.time.now + 750;
-        }*/
-        return true;
-    }
-
     function hitQuestionBox(body1, body2) {
 
         body2.sprite.kill();
@@ -171,6 +160,16 @@ this.SecretSpies = this.SecretSpies || {};
 
         if (!character.inWorld) {
             this.state.start("NewYorkLevelState");
+        }
+
+        if (character.position.y > 3400) {
+            this.state.add("NewYorkDeathState", new SecretSpies.NewYorkDeathState());
+            this.state.start("NewYorkDeathState");
+        }
+
+        if (character.position.x > 20578) {
+            this.state.add("FinishedLevelState", new SecretSpies.FinishedLevelState());
+            this.state.start("FinishedLevelState");
         }
 
         if(character.position.x < 0) {
