@@ -162,7 +162,7 @@ this.SecretSpies = this.SecretSpies || {};
             this.state.start("CairoLevelState");
         }
       
-        if (character.position.y > 3200) {
+        if (character.position.y > 3500) {
             this.state.add("CairoDeathState", new SecretSpies.CairoDeathState());
             this.state.start("CairoDeathState");
         }

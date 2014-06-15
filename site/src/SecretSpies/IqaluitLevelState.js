@@ -22,7 +22,6 @@ this.SecretSpies = this.SecretSpies || {};
         this.load.image("IqaluitLevelState/questionBoxes", assets.common.child("textures/questionBox.png"));
 
         this.load.image("IqaluitLevelState/ui/questionPanel", assets.common.child("ui/mediumMenu.png"));
-        this.load.image("IqaluitLevelState/ui/questionPanel", assets.common.child("ui/defaultButton.png"));
         this.load.image("IqaluitLevelState/ui/correctAnswer", assets.common.child("ui/correctAnswer.png"));
         this.load.image("IqaluitLevelState/ui/wrongAnswer", assets.common.child("ui/wrongAnswer.png"));
         this.load.image("IqaluitLevelState/ui/defaultAnswer", assets.common.child("ui/defaultAnswer.png"));
@@ -164,33 +163,35 @@ this.SecretSpies = this.SecretSpies || {};
     }
 
     function hitQuestionBox(body1, body2) {
-        var questionPanel = this.add.sprite(this.world.centerX, this.world.centerY, "IqaluitLevelState/ui/questionPanel");
-        questionPanel.fixedToCamera = true;
+        var character = this.objects["character"];
+        var questionPanel = this.add.sprite(this.stage.bounds.width / 2, this.stage.bounds.height / 2, "IqaluitLevelState/ui/questionPanel");
         questionPanel.anchor.setTo(0.5);
         questionPanel.visible = true;
+        questionPanel.fixedToCamera = true;
+        character.body.static = true;
         var buttonGroup = this.add.group();
         var genButton = function(text, correctAnswer) {
-            var b = this.add.labelSprite(0, 0, "IqaluitLevelState/ui/defaultAnswer",
-                {
-                    "font": "20px Arial",
-                    "fill": "white"
-                });
+            var b = this.add.labelButton(this.stage.bounds.width / 2, this.stage.bounds.height / 2,  "IqaluitLevelState/ui/defaultAnswer",
+            {
+                "font": "20px Arial",
+                "fill": "white"
+            });
             b.setText(text);
+            b.visible = true;
             buttonGroup.add(b);
-            SecretSpies.scaler(b, "texture").scale(478, 478);
+            var scaler = SecretSpies.scaler(b, "texture");
+            scaler.scale(200, 200);
             var text = this.add.text(
-                this.world.centerX, 
-                this.world.centerY - 478,
+                this.stage.bounds.width / 2, 
+                this.stage.bounds.height / 2 - 100,
                 (num1 + " " + op + " " + num2).toString(),
                 {
                     "font": "20px Arial",
-                    "fill": "white"
+                    "fill": "black"
                 });
             text.anchor.set(0.5);
             text.fixedToCamera = true;
-
             buttonGroup.add(text);
-
             var inputHandler = function(b) {
                 var scale = {x: b.scale.x, y: b.scale.y};
                 b.inputEnabled = true;
@@ -205,19 +206,12 @@ this.SecretSpies = this.SecretSpies || {};
                         this.objects["scoreDisplay"].setText(this.objects["score"].toString());
                         buttonGroup.forEach(function(obj) {
                             if (b !== obj) {
-                                smallenAndKill.call(this, obj, 500);
+                                b.inputEnabled = false;
+                                b.kill ? b.kill() : b.destroy();
                             }
                         }, this);
-                        smallenAndKill.call(this, b, 500, function() {
-                            smallenAndKill.call(this, questionPanel, 500, function() {
-                                var gTween2 = this.add.tween(g).to({alpha: 0}, 200, Phaser.Easing.Linear.None, false, 0, 0, false);
-                                gTween2.onComplete.add(function() {
-                                    this._inQuestion = false;
-                                    ball.body.moves = true;
-                                }, this);
-                                gTween2.start();
-                            });
-                        })
+                        b.inputEnabled = false;
+                        b.kill ? b.kill() : b.destroy();
                     } else {
                         this.objects["backButton"].inputEnabled = false;
                         var questionFailPanelRules = rules["ui"]["questionFailPanel"];
@@ -225,7 +219,7 @@ this.SecretSpies = this.SecretSpies || {};
                         var t = questionFailPanelRules["text"];
                         var st = questionFailPanelRules["style"];
 
-                        var failPanel = this.add.sprite(this.world.centerX, this.world.centerY, params.name + "/ui/questionFailPanel");
+                        var failPanel = this.add.sprite(this.stage.bounds.width / 2, this.stage.bounds.height / 2, "IqaluitLevelState/ui/questionFailPanel");
                         failPanel.visible = false;
                         SecretSpies.scaler(failPanel, "texture").scale(1, 1);
 
@@ -237,34 +231,19 @@ this.SecretSpies = this.SecretSpies || {};
                         failPanel.fixedToCamera = true;
                         failPanel.anchor.setTo(0.5);
                         failPanel.visible = true;
-                        var failPanelTween = this.add.tween(failPanel.scale).to(sQ, 300, Phaser.Easing.Sinusoidal.InOut, false, 0, 0, false);
-                        failPanelTween.onComplete.add(function() {
-                            var gameOverText = this.add.text(
-                                this.world.centerX, 
-                                this.world.centerY, 
-                                t, 
-                                st
-                                );
-                            gameOverText.anchor.set(0.5);
-                            gameOverText.fixedToCamera = true;
-                            failPanel.inputEnabled = true;
-                            failPanel.events.onInputDown.add(function() {
-                                failPanel.inputEnabled = false;
-                                var tween = this.add.tween(this.world).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, false, 0, 0, false);
-                                tween.onComplete.add(function() {
-                                    this.state.add("MainMenuState", new SecretSpies.MainMenuState());
-                                    this.state.start("MainMenuState");
-                                }, this);
-                                tween.start();
-                            }, this);
+                        var gameOverText = this.add.text(this.stage.bounds.width / 2, this.stage.bounds.height / 2, t, st);
+                        gameOverText.anchor.set(0.5);
+                        gameOverText.fixedToCamera = true;
+                        failPanel.inputEnabled = true;
+                        failPanel.events.onInputDown.add(function() {
+                            failPanel.ifnputEnabled = false;
                         }, this);
-failPanelTween.start();
-}
-}, this);
-}
-inputHandler.call(this, b);
-return b
-}
+                    }
+                }, this);
+            }
+            inputHandler.call(this, b);
+            return b;
+        }
 
 function shuffleArray(array) {
     for (var i = array.length - 1; i > 0; i--) {
@@ -351,24 +330,25 @@ buttonArray = shuffleArray(buttonArray);
 var b;
 
 b = buttonArray[0];
-b.x = this.world.centerX - 1.2 * 478;
-b.y = this.world.centerY + 478;
+b.x = this.stage.bounds.width / 2 - 1.2 * 478;
+b.y = this.stage.bounds.height / 2 + 478;
 b.fixedToCamera = true;
 
 b = buttonArray[1];
-b.x = this.world.centerX + 0.2 * 478;
-b.y = this.world.centerY + 478;
+b.x = this.stage.bounds.width / 2 + 0.2 * 478;
+b.y = this.stage.bounds.height / 2 + 478;
 b.fixedToCamera = true;
 
 b = buttonArray[2];
-b.x = this.world.centerX - 1.2 * 478;
-b.y = this.world.centerY + 2.5 * 478;
+b.x = this.stage.bounds.width / 2 - 1.2 * 478;
+b.y = this.stage.bounds.height / 2 + 2.5 * 478;
 b.fixedToCamera = true;
 
 b = buttonArray[3];
-b.x = this.world.centerX + 0.2 * 478;
-b.y = this.world.centerY+ 2.5 * 478;
+b.x = this.stage.bounds.width / 2 + 0.2 * 478;
+b.y = this.stage.bounds.height / 2+ 2.5 * 478;
 b.fixedToCamera = true;
+
 body2.sprite.kill();
 }
 
