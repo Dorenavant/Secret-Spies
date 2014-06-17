@@ -110,7 +110,6 @@ this.SecretSpies = this.SecretSpies || {};
             questionBox.body.static = true;
             questionBox.body.setCollisionGroup(questionBoxCollisionGroup);
             questionBox.body.collides(characterCollisionGroup);
-            questionBox.body.collides(tilesCollisionGroup);
         }, this);
 
         character.body.collides(tilesCollisionGroup);
@@ -154,47 +153,120 @@ this.SecretSpies = this.SecretSpies || {};
         this, 0, 1, 2, 1);
         backButton.fixedToCamera = true;
         backButton.setText("Back");
+        var g = this.objects["blackOverlay"] = this.add.graphics(0, 0);
+        g.fixedToCamera = true;
+        g.lineStyle(1, 0, 0.5);
+        g.beginFill(0, 0.5);
+        g.drawRect(0, 0, this.stage.bounds.width, this.stage.bounds.height);
+        g.endFill();
+        g.alpha = 0;
     }
 
     function hitCoin(body1, body2) {
         var coinCounter = ++this.objects["coinCounter"];
+        var temp = body1.velocity;
         this.objects["coinCounterDisplay"].setText(coinCounter.toString());
         body2.sprite.kill();
+        body1.velocity = temp;
     }
 
     function hitQuestionBox(body1, body2) {
+        if (body2.alreadyHit) {
+            return;
+        }
+        body2.alreadyHit = true;
+        body2.sprite.kill();
         var character = this.objects["character"];
-        var questionPanel = this.add.sprite(this.stage.bounds.width / 2, this.stage.bounds.height / 2, "IqaluitLevelState/ui/questionPanel");
+        this.input.keyboard.disabled = true;
+        character.body.setZeroVelocity();
+        this.physics.p2.gravity.y = 0;
+        var center = {
+            x: this.stage.bounds.width / 2,
+            y: this.stage.bounds.height / 2
+        }
+        var questionPanel = this.add.sprite(center.x, center.y, "IqaluitLevelState/ui/questionPanel");
+        var panelSize = {
+            width: 400,
+            height: 400
+        };
+        var panelStyle = {
+            "style": {
+                "font": "bold 30px monospace", 
+                "fill": "#000000", 
+                "align": "center", 
+                "stroke": "#FFFFFF", 
+                "strokeThickness": 1
+            }
+        };
+        questionPanel.visible = false;
+
+        var scaleRequired = {
+            x: panelSize["width"] / questionPanel.texture.width,
+            y: panelSize["height"] / questionPanel.texture.height
+        }
+
+        var SCALE_FACTOR = 1.2;
+
+        questionPanel.fixedToCamera = true;
         questionPanel.anchor.setTo(0.5);
         questionPanel.visible = true;
-        questionPanel.fixedToCamera = true;
-        character.body.static = true;
         var buttonGroup = this.add.group();
+        var size = {
+            width: 120,
+            height: 45
+        };
+        var style = {
+            "style": {
+                "font": "bold 30px monospace", 
+                "fill": "#000000", 
+                "align": "center", 
+                "stroke": "#FFFFFF", 
+                "strokeThickness": 1
+            }
+        };
+
+        var g = this.objects["blackOverlay"];
+
         var genButton = function(text, correctAnswer) {
-            var b = this.add.labelButton(this.stage.bounds.width / 2, this.stage.bounds.height / 2,  "IqaluitLevelState/ui/defaultAnswer",
-            {
-                "font": "20px Arial",
-                "fill": "white"
-            });
+            g.alpha = 0.75;
+            var b = this.add.labelSprite(0, 0, "IqaluitLevelState/ui/defaultAnswer", style);
             b.setText(text);
-            b.visible = true;
             buttonGroup.add(b);
             var scaler = SecretSpies.scaler(b, "texture");
-            scaler.scale(200, 200);
-            var text = this.add.text(
-                this.stage.bounds.width / 2, 
-                this.stage.bounds.height / 2 - 100,
+            scaler.scale(size);
+
+            var smallenAndKill = function(b, time, alsoAdd) {
+                var t = this.add.tween(b.scale).to({x: 0, y: 0}, time, Phaser.Easing.Quintic.InOut, false, 0, 0, false);
+                b.inputEnabled = false;
+                t.onComplete.add(function() {
+                    b.kill ? b.kill() : b.destroy();
+                }, this);
+                if (alsoAdd) {
+                    t.onComplete.add(alsoAdd, this);
+                }
+                t.start();
+            }
+
+            var text = this.objects["text"] = this.add.text(
+                center.x, 
+                center.y - size.height,
                 (num1 + " " + op + " " + num2).toString(),
-                {
-                    "font": "20px Arial",
-                    "fill": "black"
-                });
+                panelStyle
+                );
             text.anchor.set(0.5);
             text.fixedToCamera = true;
+
             buttonGroup.add(text);
+
             var inputHandler = function(b) {
                 var scale = {x: b.scale.x, y: b.scale.y};
                 b.inputEnabled = true;
+                b.events.onInputOver.add(function() {
+                    this.add.tween(b.scale).to({x: SCALE_FACTOR * scale.x, y: SCALE_FACTOR * scale.y}, 200, Phaser.Easing.Quintic.InOut, true, 0, 0, false);
+                }, this);
+                b.events.onInputOut.add(function() {
+                    this.add.tween(b.scale).to({x: scale.x, y: scale.y}, 200, Phaser.Easing.Quintic.InOut, true, 0, 0, false);
+                }, this);
                 b.loadAppropriateTextureForAnswer = function() {
                     this.loadTexture("IqaluitLevelState" + (correctAnswer ? "/ui/correctAnswer" : "/ui/wrongAnswer"));
                 }
@@ -202,70 +274,67 @@ this.SecretSpies = this.SecretSpies || {};
                     buttonGroup.setAll("inputEnabled", false);
                     buttonGroup.callAll("loadAppropriateTextureForAnswer", null);
                     if (correctAnswer) {
-                        this.objects["score"] += rules["map"]["coins"]["correctScore"];
-                        this.objects["scoreDisplay"].setText(this.objects["score"].toString());
+                        this.objects["coinCounter"] += 10;
+                        this.objects["coinCounterDisplay"].setText(this.objects["coinCounter"].toString());
                         buttonGroup.forEach(function(obj) {
                             if (b !== obj) {
-                                b.inputEnabled = false;
-                                b.kill ? b.kill() : b.destroy();
+                                smallenAndKill.call(this, obj, 500);
                             }
                         }, this);
-                        b.inputEnabled = false;
-                        b.kill ? b.kill() : b.destroy();
+                        smallenAndKill.call(this, b, 500, function() {
+                            smallenAndKill.call(this, questionPanel, 500, function() {
+                                var gTween2 = this.add.tween(g).to({alpha: 0}, 200, Phaser.Easing.Linear.None, false, 0, 0, false);
+                                gTween2.onComplete.add(function() {
+                                    this.physics.p2.gravity.y = 500;
+                                    this.input.keyboard.disabled = false;
+                                }, this);
+                                gTween2.start();
+                            });
+                        })
                     } else {
-                        this.objects["backButton"].inputEnabled = false;
-                        var questionFailPanelRules = rules["ui"]["questionFailPanel"];
-                        var s = questionFailPanelRules["size"];
-                        var t = questionFailPanelRules["text"];
-                        var st = questionFailPanelRules["style"];
-
-                        var failPanel = this.add.sprite(this.stage.bounds.width / 2, this.stage.bounds.height / 2, "IqaluitLevelState/ui/questionFailPanel");
-                        failPanel.visible = false;
-                        SecretSpies.scaler(failPanel, "texture").scale(1, 1);
-
-                        var sQ = {
-                            x: s["width"] / failPanel.texture.width, 
-                            y: s["height"] / failPanel.texture.width
+                       buttonGroup.forEach(function(obj) {
+                        if (b !== obj) {
+                            smallenAndKill.call(this, obj, 500);
                         }
-
-                        failPanel.fixedToCamera = true;
-                        failPanel.anchor.setTo(0.5);
-                        failPanel.visible = true;
-                        var gameOverText = this.add.text(this.stage.bounds.width / 2, this.stage.bounds.height / 2, t, st);
-                        gameOverText.anchor.set(0.5);
-                        gameOverText.fixedToCamera = true;
-                        failPanel.inputEnabled = true;
-                        failPanel.events.onInputDown.add(function() {
-                            failPanel.ifnputEnabled = false;
-                        }, this);
-                    }
-                }, this);
+                    }, this);
+                       smallenAndKill.call(this, b, 500, function() {
+                        smallenAndKill.call(this, questionPanel, 500, function() {
+                            var gTween2 = this.add.tween(g).to({alpha: 0}, 200, Phaser.Easing.Linear.None, false, 0, 0, false);
+                            gTween2.onComplete.add(function() {
+                                this.physics.p2.gravity.y = 500;
+                                this.input.keyboard.disabled = false;
+                            }, this);
+                            gTween2.start();
+                        });
+                    })
+                   }
+               }, this);
             }
             inputHandler.call(this, b);
             return b;
         }
 
-function shuffleArray(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-    return array;
-}
+        function shuffleArray(array) {
+            for (var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+            return array;
+        }
 
-var operators = {
-    "+": function(a, b) {return a + b},
-    "-": function(a, b) {return a - b},
-    "*": function(a, b) {return a * b},
-    "/": function(a, b) {return a / b},
-    "array": ["+", "-", "*", "/"]
-}
+        var operators = {
+            "+": function(a, b) {return a + b},
+            "-": function(a, b) {return a - b},
+            "*": function(a, b) {return a * b},
+            "/": function(a, b) {return a / b},
+            "array": ["+", "-", "*", "/"]
+        }
 
-var num1, num2, op, answer;
-var op = operators.array[this.rnd.integerInRange(0, 3)];
-var temp;
+        var num1, num2, op, answer;
+        var op = operators.array[this.rnd.integerInRange(0, 3)];
+        var temp;
 
 switch (op) {
     case "+": 
@@ -295,8 +364,7 @@ switch (op) {
 }
 
 answer = operators[op](num1, num2);
-var wrongAnswers = [
-];
+var wrongAnswers = [];
 
 for (var i = 0; i < 3; ++i) {
     outerloop:
@@ -330,26 +398,24 @@ buttonArray = shuffleArray(buttonArray);
 var b;
 
 b = buttonArray[0];
-b.x = this.stage.bounds.width / 2 - 1.2 * 478;
-b.y = this.stage.bounds.height / 2 + 478;
+b.x = center.x - 1.2 * size.width;
+b.y = center.y + size.height;
 b.fixedToCamera = true;
 
 b = buttonArray[1];
-b.x = this.stage.bounds.width / 2 + 0.2 * 478;
-b.y = this.stage.bounds.height / 2 + 478;
+b.x = center.x + 0.2 * size.width;
+b.y = center.y + size.height;
 b.fixedToCamera = true;
 
 b = buttonArray[2];
-b.x = this.stage.bounds.width / 2 - 1.2 * 478;
-b.y = this.stage.bounds.height / 2 + 2.5 * 478;
+b.x = center.x - 1.2 * size.width;
+b.y = center.y + 2.5 * size.height;
 b.fixedToCamera = true;
 
 b = buttonArray[3];
-b.x = this.stage.bounds.width / 2 + 0.2 * 478;
-b.y = this.stage.bounds.height / 2+ 2.5 * 478;
+b.x = center.x + 0.2 * size.width;
+b.y = center.y + 2.5 * size.height;
 b.fixedToCamera = true;
-
-body2.sprite.kill();
 }
 
 function hitMob() {

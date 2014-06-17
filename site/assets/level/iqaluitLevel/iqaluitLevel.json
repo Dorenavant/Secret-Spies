@@ -5217,20 +5217,6 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":733,
-                 "y":3155
-                }, 
-                {
-                 "gid":163,
-                 "height":0,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "type":"",
-                 "visible":true,
-                 "width":0,
                  "x":2261,
                  "y":2299
                 }, 
@@ -5261,6 +5247,20 @@
                  "width":0,
                  "x":10917,
                  "y":2667
+                }, 
+                {
+                 "gid":163,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":722,
+                 "y":3120
                 }],
          "opacity":1,
          "type":"objectgroup",
