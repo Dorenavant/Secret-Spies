@@ -1,4 +1,4 @@
 RIKAL-Game-js
 ============
 
-untitled game
+2D Platformer built on Phaser P2 Physics
